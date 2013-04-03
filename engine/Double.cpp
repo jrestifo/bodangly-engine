@@ -35,11 +35,6 @@ Double& Double::operator=(const Double& dblB) {
 	return *this;
 }
 
-Double& Double::clone(const Double& dblB) {
-	_val = dblB._val;
-	return *this;
-}
-
 /* Math operations
  * Double -> Double
  */

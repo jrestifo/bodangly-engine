@@ -44,7 +44,6 @@ public:
 	virtual ~Double();
 
 	Double& operator=(const Double& dblB);
-	Double& clone(const Double& dblB);
 
 	Double operator+(const Double& dblB) const;
 	Double& operator+=(const Double& dblB);

@@ -44,7 +44,6 @@ public:
 	virtual ~Float();
 
 	Float& operator=(const Float& flB);
-	Float& clone(const Float& flB);
 
 	Float operator+(const Float& flB) const;
 	Float& operator+=(const Float& flB);

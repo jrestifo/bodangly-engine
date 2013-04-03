@@ -26,16 +26,8 @@ Float::~Float() {
 
 /* Assignments
  * Float -> Float
- * = preserves the original epsilon
- * clone does not
  */
-
 Float& Float::operator=(const Float& flB) {
-	_val = flB._val;
-	return *this;
-}
-
-Float& Float::clone(const Float& flB) {
 	_val = flB._val;
 	return *this;
 }
