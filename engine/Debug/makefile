@@ -40,19 +40,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: MyEngine.exe
+all: engine.exe
 
 # Tool invocations
-MyEngine.exe: $(OBJS) $(USER_OBJS)
+engine.exe: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cygwin C++ Linker'
-	g++  -o "MyEngine.exe" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++  -o "engine.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(C++_DEPS)$(OBJS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(IPP_DEPS)$(CXX_DEPS)$(C_UPPER_DEPS) MyEngine.exe
+	-$(RM) $(C++_DEPS)$(OBJS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(IPP_DEPS)$(CXX_DEPS)$(C_UPPER_DEPS) engine.exe
 	-@echo ' '
 
 .PHONY: all clean dependents

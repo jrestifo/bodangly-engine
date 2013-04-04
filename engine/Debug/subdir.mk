@@ -11,6 +11,7 @@ CPP_SRCS += \
 ../Float_test.cpp \
 ../Main_test.cpp \
 ../Mobile.cpp \
+../MobileFactory.cpp \
 ../Mobile_test.cpp \
 ../Screen.cpp \
 ../Screen_test.cpp \
@@ -25,6 +26,7 @@ OBJS += \
 ./Float_test.o \
 ./Main_test.o \
 ./Mobile.o \
+./MobileFactory.o \
 ./Mobile_test.o \
 ./Screen.o \
 ./Screen_test.o \
@@ -39,6 +41,7 @@ CPP_DEPS += \
 ./Float_test.d \
 ./Main_test.d \
 ./Mobile.d \
+./MobileFactory.d \
 ./Mobile_test.d \
 ./Screen.d \
 ./Screen_test.d \

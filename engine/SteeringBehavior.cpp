@@ -289,5 +289,6 @@ void SteeringBehavior::flock(std::list<Mobile *> lst_Mobs) {
 	std::list<Mobile *>::const_iterator ciiMobile;
 	for (ciiMobile = lst_Mobs.begin(); ciiMobile != lst_Mobs.end(); ciiMobile++) {
 		//TODO Finish implementing flock
+		if (*ciiMobile.)
 	}
 }

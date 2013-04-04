@@ -21,7 +21,7 @@ class Mobile {
 public:
 	Mobile();
 
-	Mobile(const Screen* const screen, const Double& mass,
+	Mobile(const uint32_t& id, const Screen* const screen, const Double& mass,
 			const Double& maxSpeed, const Double& rotation,
 			const Vector2D<Double>& position,
 			const Vector2D<int32_t>& screenPosition,
@@ -32,6 +32,27 @@ public:
 
 	void update();
 
+	Mobile& operator=(const Mobile& mobB);
+	Mobile operator==(const Mobile& mobB) const;
+	Mobile operator<(const Mobile& mobB) const;
+	edgeBehavior_t getEdgeBehavior() const;
+	void setEdgeBehavior(const edgeBehavior_t& edgeBehavior);
+	const Double& getMass() const;
+	void setMass(const Double& mass);
+	const Double& getMaxSpeed() const;
+	void setMaxSpeed(const Double& maxSpeed);
+	const Vector2D<Double>& getPosition() const;
+	void setPosition(const Vector2D<Double>& position);
+	const Double& getRotation() const;
+	void setRotation(const Double& rotation);
+	const Screen* getScreen() const;
+	const Vector2D<int32_t>& getScreenPosition() const;
+	SteeringBehavior* getSteering() const;
+	const Vector2D<Double>& getVelocity() const;
+	void setVelocity(const Vector2D<Double>& velocity);
+
+private:
+	uint32_t _id;
 	const Screen* _screen;
 
 	Double _mass;
@@ -48,6 +69,7 @@ public:
 
 //Determines how the Mobile should act when hitting the edge of the screen
 class EdgeBehavior {
+	friend class Mobile;
 public:
 	EdgeBehavior();
 	EdgeBehavior(const edgeBehavior_t& behavior, Mobile* parent);
@@ -57,6 +79,7 @@ public:
 	void execute();
 
 private:
+
 	Mobile* _parent;
 	edgeBehavior_t _behavior;
 

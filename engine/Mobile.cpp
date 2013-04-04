@@ -13,10 +13,13 @@
 #include "SteeringBehavior.h"
 #include "EngineMath.h"
 
+#define INVALID_ID 0
+class MobileFactory;
+extern uint32_t MobileFactory::GenerateNewID();
 class SteeringBehavior;
 
 Mobile::Mobile() {
-
+	_id = MobileFactory::GenerateNewID();
 	_screen = NULL;
 	_edgeBehavior = NULL;
 	_mass = 1.0;
@@ -28,13 +31,14 @@ Mobile::Mobile() {
 
 }
 
-Mobile::Mobile(const Screen* const screen, const Double& mass,
+Mobile::Mobile(const uint32_t& id, const Screen* const screen, const Double& mass,
 		const Double& maxSpeed, const Double& rotation,
 		const Vector2D<Double>& position,
 		const Vector2D<int32_t>& screenPosition,
 		const Vector2D<Double>& velocity, const edgeBehavior_t& edgeBehavior,
 		const bool& isSteered) {
 
+	_id = id;
 	_screen = screen;
 	_edgeBehavior = new EdgeBehavior(edgeBehavior, this);
 	_mass = mass;
@@ -50,8 +54,40 @@ Mobile::Mobile(const Screen* const screen, const Double& mass,
 
 }
 
+
+
 Mobile::~Mobile() {
 	delete _edgeBehavior;
+	if (_steeringBehavior)
+		delete _steeringBehavior;
+}
+
+Mobile& Mobile::operator=(const Mobile& mobB) {
+	if (this->_id == INVALID_ID)
+		_id = MobileFactory::GenerateNewID();
+	_screen = mobB._screen;
+	_edgeBehavior = new EdgeBehavior(mobB._edgeBehavior->_behavior, this);
+	if (mobB._steeringBehavior)
+		_steeringBehavior = new SteeringBehavior(this,
+				mobB._steeringBehavior->_approachDistance,
+				mobB._steeringBehavior->_avoidBuffer,
+				mobB._steeringBehavior->_avoidDistance,
+				mobB._steeringBehavior->_comfortDistance,
+				mobB._steeringBehavior->_maxForce,
+				mobB._steeringBehavior->_pathIndex,
+				mobB._steeringBehavior->_pathThreshold,
+				mobB._steeringBehavior->_viewDistance,
+				mobB._steeringBehavior->_wanderDistance,
+				mobB._steeringBehavior->_wanderRadius,
+				mobB._steeringBehavior->_wanderRange,
+				mobB._steeringBehavior->_wanderAngle,
+				mobB._steeringBehavior->_steeringForce);
+	_velocity = mobB._velocity;
+	_mass = mobB._mass;
+	_position = mobB._position;
+	_screenPosition = mobB._screenPosition;
+	_rotation = mobB._rotation;
+	_maxSpeed = mobB._maxSpeed;
 }
 
 void Mobile::update(void) {
@@ -153,4 +189,64 @@ void EdgeBehavior::wrap() {
 		if (position->getY() < 0)
 			position->setY(_parent->_screen->getHeight());
 	}
+}
+
+edgeBehavior_t Mobile::getEdgeBehavior() const {
+	return _edgeBehavior->_behavior;
+}
+
+void Mobile::setEdgeBehavior(const edgeBehavior_t& edgeBehavior) {
+	_edgeBehavior = new EdgeBehavior(edgeBehavior, this);
+}
+
+const Double& Mobile::getMass() const {
+	return _mass;
+}
+
+void Mobile::setMass(const Double& mass) {
+	_mass = mass;
+}
+
+const Double& Mobile::getMaxSpeed() const {
+	return _maxSpeed;
+}
+
+void Mobile::setMaxSpeed(const Double& maxSpeed) {
+	_maxSpeed = maxSpeed;
+}
+
+const Vector2D<Double>& Mobile::getPosition() const {
+	return _position;
+}
+
+void Mobile::setPosition(const Vector2D<Double>& position) {
+	_position = position;
+}
+
+const Double& Mobile::getRotation() const {
+	return _rotation;
+}
+
+void Mobile::setRotation(const Double& rotation) {
+	_rotation = rotation;
+}
+
+const Screen* Mobile::getScreen() const {
+	return _screen;
+}
+
+const Vector2D<int32_t>& Mobile::getScreenPosition() const {
+	return _screenPosition;
+}
+
+SteeringBehavior* Mobile::getSteering() const {
+	return _steeringBehavior;
+}
+
+const Vector2D<Double>& Mobile::getVelocity() const {
+	return _velocity;
+}
+
+void Mobile::setVelocity(const Vector2D<Double>& velocity) {
+	_velocity = velocity;
 }

@@ -14,6 +14,7 @@
 class Mobile;
 
 class SteeringBehavior {
+	friend class Mobile;
 public:
 	SteeringBehavior();
 
