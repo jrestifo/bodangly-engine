@@ -132,6 +132,6 @@ private:
 
 };
 
-#include "Vector2D.ipp"
+#include "Vector2D.ii"
 
 #endif /* VECTOR2D_H_ */

@@ -22,9 +22,9 @@ MobileFactory* MobileFactory::Instance() {
 }
 
 uint32_t MobileFactory::RegisterMob(Mobile* pMob) {
-	uint32_t new_id = _crandom.getNumber();
+	uint32_t new_id = _cRandom.getNumber();
 	while (_pMobs.find(new_id) != _pMobs.end() && INVALID_ID != new_id)
-		new_id = _crandom.getNumber();
+		new_id = _cRandom.getNumber();
 	_pMobs[new_id] = pMob;
 	return new_id;
 }

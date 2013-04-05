@@ -19,9 +19,6 @@ CPP_SRCS += \
 ../SteeringBehavior.cpp \
 ../Steering_test.cpp 
 
-IPP_SRCS += \
-../Singleton.ipp 
-
 OBJS += \
 ./Circle.o \
 ./Double.o \
@@ -35,7 +32,6 @@ OBJS += \
 ./Random.o \
 ./Screen.o \
 ./Screen_test.o \
-./Singleton.o \
 ./SteeringBehavior.o \
 ./Steering_test.o 
 
@@ -55,19 +51,9 @@ CPP_DEPS += \
 ./SteeringBehavior.d \
 ./Steering_test.d 
 
-IPP_DEPS += \
-./Singleton.d 
-
 
 # Each subdirectory must supply rules for building sources it contributes
 %.o: ../%.cpp
-	@echo 'Building file: $<'
-	@echo 'Invoking: Cygwin C++ Compiler'
-	g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
-	@echo 'Finished building: $<'
-	@echo ' '
-
-%.o: ../%.ipp
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cygwin C++ Compiler'
 	g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"

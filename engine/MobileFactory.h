@@ -29,7 +29,7 @@ private:
 	MobileFactory& operator=(MobileFactory const&){};
 	static MobileFactory* _pInstance;
 
-	Random _crandom;
+	Random _cRandom;
 	std::map<uint32_t, Mobile*> _pMobs;
 };
 
