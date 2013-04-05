@@ -76,23 +76,23 @@ public:
 	const Vector2D<Double>& getSteeringForce() const;
 	void setSteeringForce(const Vector2D<Double>& steeringForce);
 
-	void seek(const Vector2D<Double>& v2_target);
+	void seek(const Vector2D<Double>& v2Target);
 
-	void flee(const Vector2D<Double>& v2_target);
+	void flee(const Vector2D<Double>& v2Target);
 
-	void approach(const Vector2D<Double>& v2_target);
+	void approach(const Vector2D<Double>& v2Target);
 
-	void follow(const Mobile* &Mob_target);
+	void follow(const Mobile* &mobTarget);
 
-	void avoid(const std::vector<Circle>& v_circles);
+	void avoid(const std::vector<Circle>& vCircles);
 
-	void evade(const Mobile* &Mob_target);
+	void evade(const Mobile* &mobTarget);
 
-	void followPath(const std::vector<Vector2D<Double> >& v_path, const bool& loop);
+	void followPath(const std::vector<Vector2D<Double> >& vv2Path, const bool& loop);
 
-	void flock(const std::list<Mobile *> Mobs);
+	void flock(const std::list<Mobile *> lstMobs);
 
-
+	bool isViewable(Mobile* pMob);
 private:
 	Mobile* _parent;
 

@@ -50,7 +50,6 @@ SteeringBehavior::SteeringBehavior(Mobile* parent) {
 }
 
 SteeringBehavior::~SteeringBehavior() {
-	// TODO Auto-generated destructor stub
 }
 
 /* Getters/Setters */
@@ -169,25 +168,25 @@ void SteeringBehavior::setWanderAngle(const Double& wanderAngle) {
 
 /* Behavior Functions */
 
-void SteeringBehavior::seek(const Vector2D<Double>& v2_target) {
-	Vector2D<Double> desiredVelocity = v2_target - _parent->_position;
+void SteeringBehavior::seek(const Vector2D<Double>& v2Target) {
+	Vector2D<Double> desiredVelocity = v2Target - _parent->_position;
 	desiredVelocity.normalize();
 	desiredVelocity *= _maxSpeed;
 	_steeringForce += desiredVelocity - _parent->_velocity;
 }
 
-void SteeringBehavior::flee(const Vector2D<Double>& v2_target) {
-	Vector2D<Double> desiredVelocity = v2_target - _parent->_position;
+void SteeringBehavior::flee(const Vector2D<Double>& v2Target) {
+	Vector2D<Double> desiredVelocity = v2Target - _parent->_position;
 	desiredVelocity.normalize();
 	desiredVelocity *= _maxSpeed;
 	_steeringForce -= desiredVelocity - _parent->_velocity;
 }
 
-void SteeringBehavior::approach(const Vector2D<Double>& v2_target) {
-	Vector2D<Double> desiredVelocity = v2_target - _parent->_position;
+void SteeringBehavior::approach(const Vector2D<Double>& v2Target) {
+	Vector2D<Double> desiredVelocity = v2Target - _parent->_position;
 	desiredVelocity.normalize();
 
-	Double distance = _parent->_position.distance(v2_target);
+	Double distance = _parent->_position.distance(v2Target);
 
 	if (distance > _approachDistance) {
 		desiredVelocity *= _maxSpeed;
@@ -197,30 +196,32 @@ void SteeringBehavior::approach(const Vector2D<Double>& v2_target) {
 	_steeringForce += desiredVelocity - _parent->_velocity;
 }
 
-void SteeringBehavior::follow(const Mobile* &Mob_target) {
+void SteeringBehavior::follow(const Mobile* &mobTarget) {
 	Double projectionDistance = _parent->_position.distance(
-			Mob_target->_position) / _maxSpeed;
-	Vector2D<Double> projectedTarget = Mob_target->_position
-			+ (Mob_target->_velocity * projectionDistance);
+			mobTarget->_position) / _maxSpeed;
+	Vector2D<Double> projectedTarget = mobTarget->_position
+			+ (mobTarget->_velocity * projectionDistance);
 	seek(projectedTarget);
 }
 
-void SteeringBehavior::evade(const Mobile* &Mob_target) {
+void SteeringBehavior::evade(const Mobile* &mobTarget) {
 	Double projectionDistance = _parent->_position.distance(
-			Mob_target->_position) / _maxSpeed;
-	Vector2D<Double> projectedTarget = Mob_target->_position
-			- (Mob_target->_velocity * projectionDistance);
+			mobTarget->_position) / _maxSpeed;
+	Vector2D<Double> projectedTarget = mobTarget->_position
+			- (mobTarget->_velocity * projectionDistance);
 	flee(projectedTarget);
 }
 
-void SteeringBehavior::avoid(const std::vector<Circle>& v_circles) {
+void SteeringBehavior::avoid(const std::vector<Circle>& vCircles) {
 	std::vector<Circle>::const_iterator ciiCircle;
-	for (ciiCircle = v_circles.begin(); ciiCircle != v_circles.end(); ciiCircle++) {
+	for (ciiCircle = vCircles.begin(); ciiCircle != vCircles.end();
+			ciiCircle++) {
 		Vector2D<Double> heading = _parent->_velocity;
 		heading.normalize();
 
 		// Create a vector between the circle and our Mobile
-		Vector2D<Double> difference = ciiCircle->getPosition() - _parent->_position;
+		Vector2D<Double> difference = ciiCircle->getPosition()
+				- _parent->_position;
 		Double differenceDotProduct = difference.dotProduct(heading);
 
 		//Make sure circle is in front of our Mobile
@@ -246,7 +247,8 @@ void SteeringBehavior::avoid(const std::vector<Circle>& v_circles) {
 										/ 2.0));
 
 				//Scale the force by the distance to the circle, inversely proportionate
-				force *= Double(1.0) - projection.getLength() / feeler.getLength();
+				force *= Double(1.0)
+						- projection.getLength() / feeler.getLength();
 
 				//Adjust our steering
 				_steeringForce += force;
@@ -259,13 +261,14 @@ void SteeringBehavior::avoid(const std::vector<Circle>& v_circles) {
 	}
 }
 
-void SteeringBehavior::followPath(const std::vector<Vector2D<Double> >& v_path, const bool& loop) {
+void SteeringBehavior::followPath(const std::vector<Vector2D<Double> >& vPath,
+		const bool& loop) {
 	Vector2D<Double> waypoint;
-	if (v_path.size() > _pathIndex)
-		waypoint = v_path[_pathIndex];
+	if (vPath.size() > _pathIndex)
+		waypoint = vPath[_pathIndex];
 
 	if (_parent->_position.distance(waypoint) < _pathThreshold) {
-		if (_pathIndex > v_path.size()) {
+		if (_pathIndex > vPath.size()) {
 			if (loop)
 				_pathIndex = 0;
 		} else {
@@ -273,22 +276,25 @@ void SteeringBehavior::followPath(const std::vector<Vector2D<Double> >& v_path, 
 		}
 	}
 
-	if (_pathIndex > v_path.size() && !loop ) {
+	if (_pathIndex > vPath.size() && !loop) {
 		approach(waypoint);
-	}
-	else {
+	} else {
 		seek(waypoint);
 	}
 }
 
-void SteeringBehavior::flock(std::list<Mobile *> lst_Mobs) {
+void SteeringBehavior::flock(std::list<Mobile *> lstMobs) {
 	Vector2D<Double> averageVelocity = _parent->_velocity;
 	Vector2D<Double> averagePosition = Vector2D<Double>();
-	uint32_t visionCount = 0;
+	uint32_t viewCount = 0;
 
 	std::list<Mobile *>::const_iterator ciiMobile;
-	for (ciiMobile = lst_Mobs.begin(); ciiMobile != lst_Mobs.end(); ciiMobile++) {
+	for (ciiMobile = lstMobs.begin(); ciiMobile != lstMobs.end(); ciiMobile++) {
 		//TODO Finish implementing flock
-		if (*ciiMobile)
+		if ((*ciiMobile)->getId() != _parent->getId()
+				&& isViewable((*ciiMobile))) {
+			averageVelocity += (*ciiMobile)->getVelocity();
+			averagePosition += (*ciiMobile)->getPosition();
+		}
 	}
 }

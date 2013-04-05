@@ -61,6 +61,10 @@ public:
 	const Vector2D<Double>& getVelocity() const;
 	void setVelocity(const Vector2D<Double>& velocity);
 
+	uint32_t getId() const {
+		return _id;
+	}
+
 private:
 	uint32_t _id;
 	const Screen* _screen;
