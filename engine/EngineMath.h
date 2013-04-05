@@ -12,5 +12,6 @@
 #include "Float.h"
 #include "Double.h"
 #include "Circle.h"
+#include "Random.h"
 
 #endif /* ENGINEMATH_H_ */

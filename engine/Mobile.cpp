@@ -12,14 +12,12 @@
 #include "Mobile.h"
 #include "SteeringBehavior.h"
 #include "EngineMath.h"
+#include "MobileFactory.h"
 
-#define INVALID_ID 0
-class MobileFactory;
-extern uint32_t MobileFactory::GenerateNewID();
 class SteeringBehavior;
 
 Mobile::Mobile() {
-	_id = MobileFactory::GenerateNewID();
+	_id = MobileFactory::Instance()->RegisterMob(this);
 	_screen = NULL;
 	_edgeBehavior = NULL;
 	_mass = 1.0;
@@ -64,7 +62,35 @@ Mobile::~Mobile() {
 
 Mobile& Mobile::operator=(const Mobile& mobB) {
 	if (this->_id == INVALID_ID)
-		_id = MobileFactory::GenerateNewID();
+		_id = MobileFactory::Instance()->RegisterMob(this);
+	_screen = mobB._screen;
+	_edgeBehavior = new EdgeBehavior(mobB._edgeBehavior->_behavior, this);
+	if (mobB._steeringBehavior)
+		_steeringBehavior = new SteeringBehavior(this,
+				mobB._steeringBehavior->_approachDistance,
+				mobB._steeringBehavior->_avoidBuffer,
+				mobB._steeringBehavior->_avoidDistance,
+				mobB._steeringBehavior->_comfortDistance,
+				mobB._steeringBehavior->_maxForce,
+				mobB._steeringBehavior->_pathIndex,
+				mobB._steeringBehavior->_pathThreshold,
+				mobB._steeringBehavior->_viewDistance,
+				mobB._steeringBehavior->_wanderDistance,
+				mobB._steeringBehavior->_wanderRadius,
+				mobB._steeringBehavior->_wanderRange,
+				mobB._steeringBehavior->_wanderAngle,
+				mobB._steeringBehavior->_steeringForce);
+	_velocity = mobB._velocity;
+	_mass = mobB._mass;
+	_position = mobB._position;
+	_screenPosition = mobB._screenPosition;
+	_rotation = mobB._rotation;
+	_maxSpeed = mobB._maxSpeed;
+	return *this;
+}
+Mobile::Mobile(Mobile const& mobB) {
+	if (this->_id == INVALID_ID)
+		_id = MobileFactory::Instance()->RegisterMob(this);
 	_screen = mobB._screen;
 	_edgeBehavior = new EdgeBehavior(mobB._edgeBehavior->_behavior, this);
 	if (mobB._steeringBehavior)

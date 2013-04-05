@@ -6,13 +6,25 @@
  */
 
 #include "MobileFactory.h"
+#include <map>
+MobileFactory* MobileFactory::_pInstance = NULL;
 
 MobileFactory::MobileFactory() {
-	// TODO Auto-generated constructor stub
-
 }
 
 MobileFactory::~MobileFactory() {
-	// TODO Auto-generated destructor stub
 }
 
+MobileFactory* MobileFactory::Instance() {
+	if (!_pInstance)
+		_pInstance = new MobileFactory;
+	return _pInstance;
+}
+
+uint32_t MobileFactory::RegisterMob(Mobile* pMob) {
+	uint32_t new_id = _crandom.getNumber();
+	while (_pMobs.find(new_id) != _pMobs.end() && INVALID_ID != new_id)
+		new_id = _crandom.getNumber();
+	_pMobs[new_id] = pMob;
+	return new_id;
+}

@@ -20,6 +20,7 @@ class Mobile {
 
 public:
 	Mobile();
+	Mobile(Mobile const& mobB);
 
 	Mobile(const uint32_t& id, const Screen* const screen, const Double& mass,
 			const Double& maxSpeed, const Double& rotation,
@@ -35,19 +36,28 @@ public:
 	Mobile& operator=(const Mobile& mobB);
 	Mobile operator==(const Mobile& mobB) const;
 	Mobile operator<(const Mobile& mobB) const;
+
 	edgeBehavior_t getEdgeBehavior() const;
 	void setEdgeBehavior(const edgeBehavior_t& edgeBehavior);
+
 	const Double& getMass() const;
 	void setMass(const Double& mass);
+
 	const Double& getMaxSpeed() const;
 	void setMaxSpeed(const Double& maxSpeed);
+
 	const Vector2D<Double>& getPosition() const;
 	void setPosition(const Vector2D<Double>& position);
+
 	const Double& getRotation() const;
 	void setRotation(const Double& rotation);
+
 	const Screen* getScreen() const;
+
 	const Vector2D<int32_t>& getScreenPosition() const;
+
 	SteeringBehavior* getSteering() const;
+
 	const Vector2D<Double>& getVelocity() const;
 	void setVelocity(const Vector2D<Double>& velocity);
 
