@@ -17,15 +17,16 @@ public:
 	virtual ~Random();
 
 	uint32_t getNumber();
+	void init();
 
 private:
-	uint32_t _i;
-	uint32_t _j;
-	char _s[256];
-	char _keystream[4];
+	uint8_t _i;
+	uint8_t _j;
+	uint8_t _s[256];
+	uint8_t _keystream;
 
 	//Takes a KEYLENGTH byte key
-	void init(char key[KEYLENGTH]);
+
 
 	//Generates the next 16 bytes
 	void nextRound();

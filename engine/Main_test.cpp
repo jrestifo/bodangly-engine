@@ -28,13 +28,15 @@ int main() {
 	}
 
 
-	Random rand;;
+	Random rand;
 
 
 	uint32_t num = rand.getNumber();
+	while (num != 0) {
+		//printf("%u\r\n", num);
+		num = rand.getNumber();
+	}
 
-	printf("%u\r\n", num);
-
-
+	 printf("%u", clock());
 	return 0;
 }
