@@ -17,7 +17,7 @@
 class SteeringBehavior;
 
 Mobile::Mobile() {
-	_id = MobileFactory::Instance()->RegisterMob(this);
+	_id = MobileFactory::instance()->registerMob(this);
 	_screen = NULL;
 	_edgeBehavior = NULL;
 	_mass = 1.0;
@@ -26,7 +26,6 @@ Mobile::Mobile() {
 	_screenPosition = Vector2D<int32_t>(0, 0);
 	_velocity = Vector2D<Double>(0.0, 0.0);
 	_steeringBehavior = NULL;
-
 }
 
 Mobile::Mobile(const uint32_t& id, const Screen* const screen, const Double& mass,
@@ -49,7 +48,6 @@ Mobile::Mobile(const uint32_t& id, const Screen* const screen, const Double& mas
 		_steeringBehavior = new SteeringBehavior(this);
 	else
 		_steeringBehavior = NULL;
-
 }
 
 
@@ -62,11 +60,12 @@ Mobile::~Mobile() {
 
 Mobile& Mobile::operator=(const Mobile& mobB) {
 	if (this->_id == INVALID_ID)
-		_id = MobileFactory::Instance()->RegisterMob(this);
+		_id = MobileFactory::instance()->registerMob(this);
 	_screen = mobB._screen;
 	_edgeBehavior = new EdgeBehavior(mobB._edgeBehavior->_behavior, this);
 	if (mobB._steeringBehavior)
-		_steeringBehavior = new SteeringBehavior(this,
+		_steeringBehavior = new SteeringBehavior(
+				this,
 				mobB._steeringBehavior->_approachDistance,
 				mobB._steeringBehavior->_avoidBuffer,
 				mobB._steeringBehavior->_avoidDistance,
@@ -79,7 +78,7 @@ Mobile& Mobile::operator=(const Mobile& mobB) {
 				mobB._steeringBehavior->_wanderRadius,
 				mobB._steeringBehavior->_wanderRange,
 				mobB._steeringBehavior->_wanderAngle,
-				mobB._steeringBehavior->_steeringForce);
+				mobB._steeringBehavior->_steeringForce );
 	_velocity = mobB._velocity;
 	_mass = mobB._mass;
 	_position = mobB._position;
@@ -90,7 +89,7 @@ Mobile& Mobile::operator=(const Mobile& mobB) {
 }
 Mobile::Mobile(Mobile const& mobB) {
 	if (this->_id == INVALID_ID)
-		_id = MobileFactory::Instance()->RegisterMob(this);
+		_id = MobileFactory::instance()->registerMob(this);
 	_screen = mobB._screen;
 	_edgeBehavior = new EdgeBehavior(mobB._edgeBehavior->_behavior, this);
 	if (mobB._steeringBehavior)

@@ -7,20 +7,52 @@
 
 #include "Random.h"
 #include <time.h>
+#include <stdio.h>
+
+#define _WINDOWS_
+
+#ifdef _WINDOWS_ //Use CryptGenRandom... requires some setup
+#pragma comment(lib, "crypt32.lib")
+#include <WinDef.h>
+#include <windows.h>
+#include <WinBase.h>
+#include <Wincrypt.h>
+
+void MyHandleError(char *s) {
+	printf("An error occurred in running the program.\n");
+	printf("%s\n", s);
+	printf("Error number %x\n.", GetLastError());
+	printf("Program terminating.\n");
+}
+#endif // Windows
 
 Random::Random() {
-	time_t times[4];
-	char key[KEYLENGTH];
 
-	time(&times[0]);
-	time(&times[1]);
-	time(&times[2]);
-	time(&times[3]);
+	char pbData[KEYLENGTH];
 
-	for (int i = 0; i < KEYLENGTH; ++i)
-		key[i] = *(char*)&times[i];
+#ifdef _WINDOWS_
+	HCRYPTPROV hCryptProv;
 
-	init(key);
+	if (CryptAcquireContext(&hCryptProv, NULL, NULL, PROV_RSA_FULL, 0)) {
+		printf("CryptAcquireContext succeeded. \n");
+	} else
+		MyHandleError("Error during CryptAcquireContext!\n");
+
+	if (CryptGenRandom(hCryptProv, KEYLENGTH / 2, (BYTE*) pbData)) {
+		printf("Random sequence generated\n");
+	} else
+		MyHandleError("Error during CryptGenRandom.");
+
+#endif //Windows
+
+#ifdef _LINUX_
+	if ((FILE fUrandom = fopen("/dev/urandom", r)) != NULL)
+		fscanf(fUrandom, "%16c", pbData);
+	else
+		fprintf(stderr, "Error opening /dev/urandom: %d", errno);
+#endif
+
+	init((char*) pbData);
 }
 
 Random::~Random() {
@@ -43,7 +75,7 @@ void Random::init(char key[KEYLENGTH]) {
 }
 
 uint32_t Random::getNumber() {
-	uint32_t ret = *(uint32_t*)&_keystream;
+	uint32_t ret = *(uint32_t*) &_keystream;
 	nextRound();
 	return ret;
 }
@@ -55,6 +87,6 @@ void Random::nextRound() {
 		_s[_i] ^= _s[_j];
 		_s[_j] ^= _s[_i];
 		_s[_i] ^= _s[_j];
-		_keystream[c] = _s[ ( _s[_i] + _s[_j] ) % 256];
+		_keystream[c] = _s[(_s[_i] + _s[_j]) % 256];
 	}
 }

@@ -34,19 +34,43 @@ SteeringBehavior::SteeringBehavior() {
 
 SteeringBehavior::SteeringBehavior(Mobile* parent) {
 	_parent = parent;
-	_maxForce = 1.0;
-	_steeringForce = Vector2D<Double>(0.0, 0.0);
 	_approachDistance = 100.0;
-	_wanderAngle = 0.0;
+	_avoidBuffer = 20.0;
+	_avoidDistance = 300.0;
+	_comfortDistance = 60.0;
+	_maxForce = 1.0;
+	_pathIndex = 0;
+	_pathThreshold = 20.0;
+	_viewDistance = 200.0;
 	_wanderDistance = 10.0;
 	_wanderRadius = 5.0;
 	_wanderRange = 1.0;
-	_pathIndex = 0;
-	_pathThreshold = 20.0;
-	_avoidDistance = 300.0;
-	_avoidBuffer = 20.0;
-	_viewDistance = 200.0;
-	_comfortDistance = 60.0;
+	_wanderAngle = 0.0;
+	_steeringForce = Vector2D<Double>(0.0, 0.0);
+}
+
+SteeringBehavior::SteeringBehavior(Mobile* parent,
+		const Double& approachDistance, const Double& avoidBuffer,
+		const Double& avoidDistance, const Double& comfortDistance,
+		const Double& maxForce, const int32_t& pathIndex,
+		const Double& pathThreshold, const Double& viewDistance,
+		const Double& wanderDistance, const Double& wanderRadius,
+		const Double& wanderRange, const Double& wanderAngle,
+		const Vector2D<Double>& steeringForce) {
+	_parent = parent;
+	_approachDistance = approachDistance;
+	_avoidBuffer = avoidBuffer;
+	_avoidDistance = avoidDistance;
+	_comfortDistance = comfortDistance;
+	_maxForce = maxForce;
+	_pathIndex = pathIndex;
+	_pathThreshold = pathThreshold;
+	_viewDistance = viewDistance;
+	_wanderDistance = wanderDistance;
+	_wanderRadius = wanderRadius;
+	_wanderRange = wanderRange;
+	_wanderAngle = wanderAngle;
+	_steeringForce = steeringForce;
 }
 
 SteeringBehavior::~SteeringBehavior() {
@@ -271,16 +295,14 @@ void SteeringBehavior::followPath(const std::vector<Vector2D<Double> >& vPath,
 		if (_pathIndex > vPath.size()) {
 			if (loop)
 				_pathIndex = 0;
-		} else {
+		} else
 			_pathIndex++;
-		}
 	}
 
-	if (_pathIndex > vPath.size() && !loop) {
+	if (_pathIndex > vPath.size() && !loop)
 		approach(waypoint);
-	} else {
+	else
 		seek(waypoint);
-	}
 }
 
 void SteeringBehavior::flock(std::list<Mobile *> lstMobs) {
@@ -290,11 +312,36 @@ void SteeringBehavior::flock(std::list<Mobile *> lstMobs) {
 
 	std::list<Mobile *>::const_iterator ciiMobile;
 	for (ciiMobile = lstMobs.begin(); ciiMobile != lstMobs.end(); ciiMobile++) {
-		//TODO Finish implementing flock
 		if ((*ciiMobile)->getId() != _parent->getId()
 				&& isViewable((*ciiMobile))) {
 			averageVelocity += (*ciiMobile)->getVelocity();
 			averagePosition += (*ciiMobile)->getPosition();
+			if (isTooClose((*ciiMobile)))
+				flee((*ciiMobile)->_position);
+			viewCount++;
 		}
 	}
+
+	if (viewCount > 0) {
+		averageVelocity /= viewCount;
+		averagePosition /= viewCount;
+		seek(averagePosition);
+		_steeringForce += averageVelocity - _parent->_velocity;
+	}
+}
+
+bool SteeringBehavior::isViewable(Mobile* pMob) {
+	if (_parent->_position.distance(pMob->_position) > _viewDistance)
+		return false;
+	Vector2D<Double> heading = _parent->_velocity;
+	heading.normalize();
+	Vector2D<Double> difference = pMob->_position - _parent->_position;
+	Double dotProduct = difference.dotProduct(heading);
+	if (dotProduct < 0.0)
+		return true;
+	return false;
+}
+
+bool SteeringBehavior::isTooClose(Mobile* pMob) {
+	return _parent->_position.distance(pMob->_position) < _comfortDistance;
 }

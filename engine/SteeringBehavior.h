@@ -20,7 +20,7 @@ public:
 
 	SteeringBehavior(Mobile* parent);
 
-	SteeringBehavior(Mobile* parent, const Double& arriveThreshold,
+	SteeringBehavior(Mobile* parent, const Double& approachDistance,
 			const Double& avoidBuffer, const Double& avoidDistance,
 			const Double& comfortDistance, const Double& maxForce,
 			const int32_t& pathIndex, const Double& pathThreshold,
@@ -31,7 +31,8 @@ public:
 	virtual ~SteeringBehavior();
 
 	/* Getters/Setters
-	 * TODO Finish commenting variables in Steering*/
+	 * TODO Finish commenting variables in Steering
+	 * */
 
 	//Determines how close is close enough for arrival
 	const Double& getApproachDistance() const;
@@ -88,11 +89,15 @@ public:
 
 	void evade(const Mobile* &mobTarget);
 
-	void followPath(const std::vector<Vector2D<Double> >& vv2Path, const bool& loop);
+	void followPath(const std::vector<Vector2D<Double> >& vv2Path,
+			const bool& loop);
 
 	void flock(const std::list<Mobile *> lstMobs);
 
 	bool isViewable(Mobile* pMob);
+
+	bool isTooClose(Mobile* pMob);
+
 private:
 	Mobile* _parent;
 

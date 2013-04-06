@@ -16,12 +16,12 @@ class Mobile;
 
 class MobileFactory {
 public:
-	static MobileFactory* Instance();
+	static MobileFactory* instance();
 	virtual ~MobileFactory();
 
 	//Registers a mob, adding it to the Mobs map
 	//Returns: an ID representing the map key
-	uint32_t RegisterMob(Mobile* pMob);
+	uint32_t registerMob(Mobile* pMob);
 
 private:
 	MobileFactory();
@@ -29,7 +29,7 @@ private:
 	MobileFactory& operator=(MobileFactory const&){};
 	static MobileFactory* _pInstance;
 
-	Random _cRandom;
+	Random _clRandom;
 	std::map<uint32_t, Mobile*> _pMobs;
 };
 
