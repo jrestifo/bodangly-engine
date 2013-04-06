@@ -7,14 +7,9 @@
 
 #include "Circle.h"
 
-Circle::Circle() {
-	// TODO Auto-generated constructor stub
+Circle::Circle() {}
 
-}
-
-Circle::~Circle() {
-	// TODO Auto-generated destructor stub
-}
+Circle::~Circle() {}
 
 const Vector2D<Double>& Circle::getPosition() const {
 	return _position;

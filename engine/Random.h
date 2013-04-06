@@ -11,6 +11,7 @@
 #include <inttypes.h>
 
 class Random {
+
 public:
 	Random();
 	virtual ~Random();
@@ -28,7 +29,6 @@ private:
 
 	//Generates the next 16 bytes
 	void nextRound();
-
 
 };
 

@@ -78,7 +78,7 @@ Mobile& Mobile::operator=(const Mobile& mobB) {
 				mobB._steeringBehavior->_wanderRadius,
 				mobB._steeringBehavior->_wanderRange,
 				mobB._steeringBehavior->_wanderAngle,
-				mobB._steeringBehavior->_steeringForce );
+				mobB._steeringBehavior->_steeringForce);
 	_velocity = mobB._velocity;
 	_mass = mobB._mass;
 	_position = mobB._position;
@@ -93,7 +93,8 @@ Mobile::Mobile(Mobile const& mobB) {
 	_screen = mobB._screen;
 	_edgeBehavior = new EdgeBehavior(mobB._edgeBehavior->_behavior, this);
 	if (mobB._steeringBehavior)
-		_steeringBehavior = new SteeringBehavior(this,
+		_steeringBehavior = new SteeringBehavior(
+				this,
 				mobB._steeringBehavior->_approachDistance,
 				mobB._steeringBehavior->_avoidBuffer,
 				mobB._steeringBehavior->_avoidDistance,
