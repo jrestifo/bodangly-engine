@@ -20,11 +20,19 @@ MobileFactory::~MobileFactory() {
 	delete _pInstance;
 }
 
+/* instance()
+ * returns a pointer to the singleton MobileFactory instance
+ */
 MobileFactory* MobileFactory::instance() {
 	if (!_pInstance)
 		_pInstance = new MobileFactory;
 	return _pInstance;
 }
+
+/* spawn(mob_t mobType)
+ * Generates a new mob of type mob_t, gives it a unique ID and adds it to the mob map
+ * Returns a pointer to the new mob
+ */
 
 Mobile* MobileFactory::spawn(mob_t mobType) {
 	Mobile* pNewMob = new Mobile();
@@ -33,6 +41,9 @@ Mobile* MobileFactory::spawn(mob_t mobType) {
 	return pNewMob;
 }
 
+/* registerMob(Mobile* pMob)
+ * Generates a unique ID and registers the mob in the mob map
+ */
 uint32_t MobileFactory::registerMob(Mobile* pMob) {
 	uint32_t new_id = Random::instance()->getNumber();
 	while (_pMobs.find(new_id) != _pMobs.end() && INVALID_ID != new_id)
@@ -40,4 +51,3 @@ uint32_t MobileFactory::registerMob(Mobile* pMob) {
 	_pMobs[new_id] = pMob;
 	return new_id;
 }
-

@@ -21,6 +21,7 @@ Random* Random::_pInstance = NULL;
 #include <WinBase.h>
 #include <Wincrypt.h>
 
+/* Error handler for windows */
 void MyHandleError(char *s) {
 	printf("An error occurred in running the program.\n");
 	printf("%s\n", s);
@@ -28,13 +29,28 @@ void MyHandleError(char *s) {
 	printf("Program terminating.\n");
 }
 #endif // Windows
+
 Random::Random() {
 	init();
+}
+
+/* instance()
+ * returns a pointer to the singleton Random instance
+*/
+Random* Random::instance() {
+	if (!_pInstance)
+		_pInstance = new Random;
+	return _pInstance;
 }
 
 Random::~Random() {
 }
 
+/* init()
+ * Initialize the internal rc4 rng with KEYLENGTH bytes from either
+*  /dev/urandom - Linux
+*  CryptGenRandom - Windows
+*/
 void Random::init() {
 	char key[KEYLENGTH];
 
@@ -59,6 +75,7 @@ void Random::init() {
 	fprintf(stderr, "Error opening /dev/urandom: %d", errno);
 #endif
 
+	//Initialize the internal state of the rc4 rng
 	for (int i = 0; i < 256; ++i)
 		_s[i] = i;
 
@@ -74,9 +91,13 @@ void Random::init() {
 	nextRound();
 }
 
+/* getNumber()
+ * Retrieve four bytes from the rng and returns a single 32 bit int
+ */
 uint32_t Random::getNumber() {
 
 	uint32_t ret = 0;
+
 
 	ret |= _keystream << 24;
 	nextRound();
@@ -90,6 +111,9 @@ uint32_t Random::getNumber() {
 	return ret;
 }
 
+/* nextRound()
+ * Performs the next round of the rc4 algorithm
+ */
 void Random::nextRound() {
 	_i = (_i + 1) % 256;
 	_j = (_j + _s[_i]) % 256;

@@ -104,8 +104,6 @@ inline bool Float::almostEqualUlps(Float_t& uA,  Float_t& uB, int* ulpsDiff) con
 
 /* Comparison Overloads
  * Float <-> Float
- * Core of the algorithm taken from:
- * http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
  */
 
 
