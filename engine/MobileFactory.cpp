@@ -35,8 +35,8 @@ MobileFactory* MobileFactory::instance() {
  * Returns a pointer to the new mob
  */
 
-shared_ptr<Mobile> MobileFactory::spawn(mob_t mobType) {
-	Mobile* pNewMob = new Mobile();
+std::shared_ptr<Mobile> MobileFactory::spawn(mob_t mobType) {
+	std::shared_ptr<Mobile>pNewMob(new Mobile());
 	pNewMob->_id = registerMob(pNewMob);
 
 	return pNewMob;
@@ -45,7 +45,7 @@ shared_ptr<Mobile> MobileFactory::spawn(mob_t mobType) {
 /* registerMob(Mobile* pMob)
  * Generates a unique ID and registers the mob in the mob map
  */
-uint32_t MobileFactory::registerMob(Mobile* pMob) {
+uint32_t MobileFactory::registerMob(std::shared_ptr<Mobile> pMob) {
 	uint32_t new_id = _clRandom.getNumber();
 	while (_pMobs.find(new_id) != _pMobs.end() && INVALID_ID != new_id)
 		new_id = _clRandom.getNumber();

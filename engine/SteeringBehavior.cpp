@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <inttypes.h>
 #include <stdio.h>
+#include <cstdio>
 #include <vector>
 
 #include "SteeringBehavior.h"

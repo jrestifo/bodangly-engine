@@ -8,6 +8,7 @@
 #ifndef MOBILEFACTORY_H_
 #define MOBILEFACTORY_H_
 #include <map>
+#include <memory>
 
 #include "EngineMath.h"
 #include "enum_mob.h"
@@ -22,11 +23,11 @@ public:
 	virtual ~MobileFactory();
 
 	//Creates a mob and returns a pointer to it, accepting a mob type
-	Mobile* spawn(mob_t mobType);
+	std::shared_ptr<Mobile> spawn(mob_t mobType);
 
 	//Registers a mob, adding it to the Mobs map
 	//Returns: an ID representing the map key
-	uint32_t registerMob(Mobile* pMob);
+	uint32_t registerMob(std::shared_ptr<Mobile> pMob);
 
 private:
 	MobileFactory();
@@ -34,7 +35,7 @@ private:
 	MobileFactory& operator=(MobileFactory const&){};
 	static MobileFactory* _pInstance;
 	Random _clRandom;
-	std::map<uint32_t, Mobile*> _pMobs;
+	std::map<uint32_t, std::shared_ptr<Mobile>> _pMobs;
 };
 
 
