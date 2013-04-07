@@ -10,23 +10,29 @@
 #define KEYLENGTH 16
 #include <inttypes.h>
 
+//Random is a singleton
+//This aids in synchronization as well as facilitating saving the game
+
 class Random {
 
 public:
-	Random();
+	static Random* instance();
 	virtual ~Random();
 
-	uint32_t getNumber();
 	void init();
+	uint32_t getNumber();
 
 private:
+	Random();
+	Random(Random const&) {};
+	Random& operator=(Random const&) {};
+
+	static Random* _pInstance;
+
 	uint8_t _i;
 	uint8_t _j;
 	uint8_t _s[256];
 	uint8_t _keystream;
-
-	//Takes a KEYLENGTH byte key
-
 
 	//Generates the next 16 bytes
 	void nextRound();

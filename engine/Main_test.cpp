@@ -27,16 +27,16 @@ int main() {
 		}
 	}
 
-
 	Random rand;
+	rand.init();
 
-
-	uint32_t num = rand.getNumber();
-	while (num != 0) {
-		//printf("%u\r\n", num);
+	uint32_t num = 0;
+	uint32_t i = 0;
+	while (i <= 10000) {
 		num = rand.getNumber();
+		i++;
 	}
 
-	 printf("%u", clock());
+	 printf("%u", (unsigned int)clock());
 	return 0;
 }

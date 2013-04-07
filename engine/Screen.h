@@ -11,7 +11,8 @@
 
 class Screen {
 public:
-	Screen();
+
+	static Screen* instance();
 	virtual ~Screen();
 
 	const Vector2D<uint32_t>& getDimensions();
@@ -24,6 +25,11 @@ public:
 	void setHeight(const int32_t& height) const;
 
 private:
+	Screen();
+	Screen(Screen const&);
+	Screen& operator=(Screen const&){};
+	static Screen* _pInstance;
+
 	int32_t _width;
 	int32_t _height;
 };

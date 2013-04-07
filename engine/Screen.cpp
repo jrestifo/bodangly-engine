@@ -7,7 +7,12 @@
 
 #include "Screen.h"
 
+//Ensure that the class is a singleton
+Screen* Screen::_pInstance = NULL;
+
+
 Screen::Screen() {
+
 	_width = 640;
 	_height = 480;
 
@@ -22,4 +27,10 @@ const int32_t& Screen::getWidth() const {
 
 const int32_t& Screen::getHeight() const {
 	return _height;
+}
+
+Screen* Screen::instance() {
+	if (!_pInstance)
+		_pInstance = new Screen;
+	return _pInstance;
 }

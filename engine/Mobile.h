@@ -13,21 +13,14 @@
 
 class EdgeBehavior;
 class SteeringBehavior;
+class MobileFactory;
 
 class Mobile {
+	friend class MobileFactory;
 	friend class EdgeBehavior;
 	friend class SteeringBehavior;
 
 public:
-	Mobile();
-	Mobile(Mobile const& mobB);
-
-	Mobile(const uint32_t& id, const Screen* const screen, const Double& mass,
-			const Double& maxSpeed, const Double& rotation,
-			const Vector2D<Double>& position,
-			const Vector2D<int32_t>& screenPosition,
-			const Vector2D<Double>& velocity,
-			const edgeBehavior_t& edgeBehavior, const bool& isSteered);
 
 	virtual ~Mobile();
 
@@ -52,8 +45,6 @@ public:
 	const Double& getRotation() const;
 	void setRotation(const Double& rotation);
 
-	const Screen* getScreen() const;
-
 	const Vector2D<int32_t>& getScreenPosition() const;
 
 	SteeringBehavior* getSteering() const;
@@ -66,9 +57,17 @@ public:
 	}
 
 private:
-	uint32_t _id;
-	const Screen* _screen;
+	Mobile();
+	Mobile(Mobile const& mobB);
 
+	Mobile( const Double& mass,
+			const Double& maxSpeed, const Double& rotation,
+			const Vector2D<Double>& position,
+			const Vector2D<int32_t>& screenPosition,
+			const Vector2D<Double>& velocity,
+			const edgeBehavior_t& edgeBehavior, const bool& isSteered);
+
+	uint32_t _id;
 	Double _mass;
 	Double _maxSpeed;
 	Double _rotation;

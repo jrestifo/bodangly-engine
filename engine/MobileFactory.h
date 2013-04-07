@@ -7,8 +7,10 @@
 
 #ifndef MOBILEFACTORY_H_
 #define MOBILEFACTORY_H_
-#include "EngineMath.h"
 #include <map>
+
+#include "EngineMath.h"
+#include "enum_mob.h"
 
 #define INVALID_ID 0
 
@@ -18,6 +20,9 @@ class MobileFactory {
 public:
 	static MobileFactory* instance();
 	virtual ~MobileFactory();
+
+	//Creates a mob and returns a pointer to it, accepting a mob type
+	Mobile* spawn(mob_t mobType);
 
 	//Registers a mob, adding it to the Mobs map
 	//Returns: an ID representing the map key
@@ -29,7 +34,6 @@ private:
 	MobileFactory& operator=(MobileFactory const&){};
 	static MobileFactory* _pInstance;
 
-	Random _clRandom;
 	std::map<uint32_t, Mobile*> _pMobs;
 };
 

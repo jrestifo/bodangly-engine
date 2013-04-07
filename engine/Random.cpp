@@ -4,12 +4,15 @@
  *  Created on: Apr 4, 2013
  *      Author: demian
  */
+#define _WINDOWS_
+
 
 #include "Random.h"
 #include <time.h>
 #include <stdio.h>
 
-#define _WINDOWS_
+//Ensure that the class is a singleton
+Random* Random::_pInstance = NULL;
 
 #ifdef _WINDOWS_ //Use CryptGenRandom... requires some setup
 #pragma comment(lib, "crypt32.lib")
@@ -21,11 +24,10 @@
 void MyHandleError(char *s) {
 	printf("An error occurred in running the program.\n");
 	printf("%s\n", s);
-	printf("Error number %x\n.", GetLastError());
+	printf("Error number %x\n.", (unsigned int)GetLastError());
 	printf("Program terminating.\n");
 }
 #endif // Windows
-
 Random::Random() {
 	init();
 }
@@ -36,27 +38,26 @@ Random::~Random() {
 void Random::init() {
 	char key[KEYLENGTH];
 
-	#ifdef _WINDOWS_
-		HCRYPTPROV hCryptProv;
+#ifdef _WINDOWS_
+	HCRYPTPROV hCryptProv;
 
-		if (CryptAcquireContext(&hCryptProv, NULL, NULL, PROV_RSA_FULL, 0)) {
-			printf("CryptAcquireContext succeeded. \n");
-		} else
-			MyHandleError("Error during CryptAcquireContext!\n");
+	if (CryptAcquireContext(&hCryptProv, NULL, NULL, PROV_RSA_FULL, 0)) {
+		printf("CryptAcquireContext succeeded. \n");
+	} else
+		MyHandleError("Error during CryptAcquireContext!\n");
 
-		if (CryptGenRandom(hCryptProv, KEYLENGTH / 2, (BYTE*) key)) {
-			printf("Random sequence generated\n");
-		} else
-			MyHandleError("Error during CryptGenRandom.");
+	if (CryptGenRandom(hCryptProv, KEYLENGTH / 2, (BYTE*) key)) {
+		printf("Random sequence generated\n");
+	} else
+		MyHandleError("Error during CryptGenRandom.");
 
-	#endif //Windows
-
-	#ifdef _LINUX_
-		if ((FILE fUrandom = fopen("/dev/urandom", r)) != NULL)
-			fscanf(fUrandom, "%16c", pbData);
-		else
-			fprintf(stderr, "Error opening /dev/urandom: %d", errno);
-	#endif
+#endif //Windows
+#ifdef _LINUX_
+	if ((FILE fUrandom = fopen("/dev/urandom", r)) != NULL)
+	fscanf(fUrandom, "%16c", pbData);
+	else
+	fprintf(stderr, "Error opening /dev/urandom: %d", errno);
+#endif
 
 	for (int i = 0; i < 256; ++i)
 		_s[i] = i;
@@ -90,10 +91,10 @@ uint32_t Random::getNumber() {
 }
 
 void Random::nextRound() {
-		_i = (_i + 1) % 256;
-		_j = (_j + _s[_i]) % 256;
-		char temp = _s[_j];
-		_s[_j] = _s[_i];
-		_s[_i] = temp;
-		_keystream = _s[(_s[_i] + _s[_j]) % 256];
+	_i = (_i + 1) % 256;
+	_j = (_j + _s[_i]) % 256;
+	char temp = _s[_j];
+	_s[_j] = _s[_i];
+	_s[_i] = temp;
+	_keystream = _s[(_s[_i] + _s[_j]) % 256];
 }
