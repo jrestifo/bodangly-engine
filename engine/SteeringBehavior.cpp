@@ -16,6 +16,7 @@
 //These behaviors are mostly re-implemented from
 //AdvancED ActionScript 3.0 Animation by Keith Peters
 //TODO Implement time-based integration
+//TODO Comment SteeringBehaviors
 
 class Mobile;
 

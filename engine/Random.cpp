@@ -98,7 +98,6 @@ uint32_t Random::getNumber() {
 
 	uint32_t ret = 0;
 
-
 	ret |= _keystream << 24;
 	nextRound();
 	ret |= _keystream << 16;

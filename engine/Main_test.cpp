@@ -27,13 +27,12 @@ int main() {
 		}
 	}
 
-	Random rand;
-	rand.init();
+	Random::instance()->init();
 
 	uint32_t num = 0;
 	uint32_t i = 0;
 	while (i <= 10000) {
-		num = rand.getNumber();
+		num = Random::instance()->getNumber();
 		i++;
 	}
 
