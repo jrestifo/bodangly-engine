@@ -10,17 +10,12 @@
 #define KEYLENGTH 16
 #include <inttypes.h>
 
-//Random is a singleton
-//This aids in synchronization as well as facilitating saving the game
-
 class Random {
 
 public:
-
-	/* instance()
-	 * returns a pointer to the singleton Random instance
-	*/
-	static Random* instance();
+	Random();
+	Random(Random const& randB);
+	Random& operator=(Random const& randB);
 
 	virtual ~Random();
 
@@ -37,11 +32,6 @@ public:
 	uint32_t getNumber();
 
 private:
-	Random();
-	Random(Random const&) {};
-	Random& operator=(Random const&) {};
-
-	static Random* _pInstance;
 
 	//rc4 internal state variables
 	uint8_t _i;

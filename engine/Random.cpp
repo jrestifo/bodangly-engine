@@ -11,9 +11,6 @@
 #include <time.h>
 #include <stdio.h>
 
-//Ensure that the class is a singleton
-Random* Random::_pInstance = NULL;
-
 #ifdef _WINDOWS_ //Use CryptGenRandom... requires some setup
 #pragma comment(lib, "crypt32.lib")
 #include <WinDef.h>
@@ -34,16 +31,26 @@ Random::Random() {
 	init();
 }
 
-/* instance()
- * returns a pointer to the singleton Random instance
-*/
-Random* Random::instance() {
-	if (!_pInstance)
-		_pInstance = new Random;
-	return _pInstance;
+Random::~Random() {}
+
+Random::Random(Random const& randB) {
+_i = randB._i;
+_j = randB._j;
+_keystream = randB._keystream;
+
+for (int ii = 0; ii < 256; ++ii)
+	_s[ii] = randB._s[ii];
 }
 
-Random::~Random() {
+Random& Random::operator=(Random const& randB) {
+_i = randB._i;
+_j = randB._j;
+_keystream = randB._keystream;
+
+for (int ii = 0; ii < 256; ++ii)
+	_s[ii] = randB._s[ii];
+
+return *this;
 }
 
 /* init()
