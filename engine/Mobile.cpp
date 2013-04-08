@@ -8,7 +8,9 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <cmath>
+#include <memory>
 
+#include "GameLogic.h"
 #include "Mobile.h"
 #include "SteeringBehavior.h"
 #include "EngineMath.h"
@@ -35,7 +37,7 @@ Mobile::Mobile(const Double& mass,
 		const bool& isSteered) {
 
 	_id = 0;
-	_edgeBehavior = new EdgeBehavior(edgeBehavior, this);
+	_edgeBehavior = std::shared_ptr<EdgeBehavior>(new EdgeBehavior(edgeBehavior, this));
 	_mass = mass;
 	_maxSpeed = maxSpeed;
 	_rotation = rotation;
@@ -43,7 +45,7 @@ Mobile::Mobile(const Double& mass,
 	_screenPosition = screenPosition;
 	_velocity = velocity;
 	if (isSteered)
-		_steeringBehavior = new SteeringBehavior(this);
+		_steeringBehavior = std::shared_ptr<SteeringBehavior>(new SteeringBehavior(this));
 	else
 		_steeringBehavior = NULL;
 }
@@ -51,16 +53,14 @@ Mobile::Mobile(const Double& mass,
 
 
 Mobile::~Mobile() {
-	delete _edgeBehavior;
-	if (_steeringBehavior)
-		delete _steeringBehavior;
 }
 
 Mobile& Mobile::operator=(const Mobile& mobB) {
-	_edgeBehavior = new EdgeBehavior(mobB._edgeBehavior->_behavior, this);
+	_edgeBehavior = std::shared_ptr<EdgeBehavior>(new EdgeBehavior(mobB._edgeBehavior->_behavior, this));
+	std::weak_ptr<Mobile> wptr(GameLogic::instance()->findMob(this->_id));
 	if (mobB._steeringBehavior)
-		_steeringBehavior = new SteeringBehavior(
-				this,
+		_steeringBehavior = std::shared_ptr<SteeringBehavior>(new SteeringBehavior(
+				wptr,
 				mobB._steeringBehavior->_approachDistance,
 				mobB._steeringBehavior->_avoidBuffer,
 				mobB._steeringBehavior->_avoidDistance,
@@ -73,7 +73,7 @@ Mobile& Mobile::operator=(const Mobile& mobB) {
 				mobB._steeringBehavior->_wanderRadius,
 				mobB._steeringBehavior->_wanderRange,
 				mobB._steeringBehavior->_wanderAngle,
-				mobB._steeringBehavior->_steeringForce);
+				mobB._steeringBehavior->_steeringForce));
 	_velocity = mobB._velocity;
 	_mass = mobB._mass;
 	_position = mobB._position;
@@ -83,10 +83,11 @@ Mobile& Mobile::operator=(const Mobile& mobB) {
 	return *this;
 }
 Mobile::Mobile(Mobile const& mobB) {
-	_edgeBehavior = new EdgeBehavior(mobB._edgeBehavior->_behavior, this);
+	_edgeBehavior = std::shared_ptr<EdgeBehavior>(new EdgeBehavior(mobB._edgeBehavior->_behavior, this));
+	std::weak_ptr<Mobile> wptr(GameLogic::instance()->findMob(this->_id));
 		if (mobB._steeringBehavior)
-			_steeringBehavior = new SteeringBehavior(
-					this,
+			_steeringBehavior = std::shared_ptr<SteeringBehavior>(new SteeringBehavior(
+					wptr,
 					mobB._steeringBehavior->_approachDistance,
 					mobB._steeringBehavior->_avoidBuffer,
 					mobB._steeringBehavior->_avoidDistance,
@@ -99,7 +100,7 @@ Mobile::Mobile(Mobile const& mobB) {
 					mobB._steeringBehavior->_wanderRadius,
 					mobB._steeringBehavior->_wanderRange,
 					mobB._steeringBehavior->_wanderAngle,
-					mobB._steeringBehavior->_steeringForce);
+					mobB._steeringBehavior->_steeringForce));
 		_velocity = mobB._velocity;
 		_mass = mobB._mass;
 		_position = mobB._position;
@@ -214,7 +215,7 @@ edgeBehavior_t Mobile::getEdgeBehavior() const {
 }
 
 void Mobile::setEdgeBehavior(const edgeBehavior_t& edgeBehavior) {
-	_edgeBehavior = new EdgeBehavior(edgeBehavior, this);
+	_edgeBehavior = std::shared_ptr<EdgeBehavior>(new EdgeBehavior(edgeBehavior, this));
 }
 
 const Double& Mobile::getMass() const {
@@ -253,7 +254,7 @@ const Vector2D<int32_t>& Mobile::getScreenPosition() const {
 	return _screenPosition;
 }
 
-SteeringBehavior* Mobile::getSteering() const {
+std::weak_ptr<SteeringBehavior> Mobile::getSteering() const {
 	return _steeringBehavior;
 }
 

@@ -22,7 +22,7 @@
 class Mobile;
 
 SteeringBehavior::SteeringBehavior() {
-	_parent = NULL;
+//	_parent = NULL;
 	_maxForce = 1.0;
 	_steeringForce = Vector2D<Double>(0, 0);
 	_approachDistance = 100.0;
@@ -38,7 +38,7 @@ SteeringBehavior::SteeringBehavior() {
 	_comfortDistance = 60.0;
 }
 
-SteeringBehavior::SteeringBehavior(Mobile* parent) {
+SteeringBehavior::SteeringBehavior(std::weak_ptr<Mobile> parent) {
 	_parent = parent;
 	_approachDistance = 100.0;
 	_avoidBuffer = 20.0;
@@ -55,7 +55,7 @@ SteeringBehavior::SteeringBehavior(Mobile* parent) {
 	_steeringForce = Vector2D<Double>(0.0, 0.0);
 }
 
-SteeringBehavior::SteeringBehavior(Mobile* parent,
+SteeringBehavior::SteeringBehavior(std::weak_ptr<Mobile> parent,
 		const Double& approachDistance, const Double& avoidBuffer,
 		const Double& avoidDistance, const Double& comfortDistance,
 		const Double& maxForce, const int32_t& pathIndex,
@@ -132,11 +132,11 @@ void SteeringBehavior::setMaxForce(const Double& maxForce) {
 	_maxForce = maxForce;
 }
 
-Mobile* SteeringBehavior::getParent() const {
+std::weak_ptr<Mobile> SteeringBehavior::getParent() const {
 	return _parent;
 }
 
-void SteeringBehavior::setParent(Mobile* parent) {
+void SteeringBehavior::setParent(std::weak_ptr<Mobile> parent) {
 	_parent = parent;
 }
 
@@ -199,155 +199,208 @@ void SteeringBehavior::setWanderAngle(const Double& wanderAngle) {
 /* Behavior Functions */
 
 void SteeringBehavior::seek(const Vector2D<Double>& v2Target) {
-	Vector2D<Double> desiredVelocity = v2Target - _parent->_position;
-	desiredVelocity.normalize();
-	desiredVelocity *= _maxSpeed;
-	_steeringForce += desiredVelocity - _parent->_velocity;
+	try {
+		auto parent = _parent.lock();
+		Vector2D<Double> desiredVelocity = v2Target - parent->_position;
+		desiredVelocity.normalize();
+		desiredVelocity *= _maxSpeed;
+		_steeringForce += desiredVelocity - parent->_velocity;
+	} catch (std::bad_weak_ptr bad) {
+		//TODO Implement behavior for when the weak pointer holds an expired pointer
+	}
 }
 
 void SteeringBehavior::flee(const Vector2D<Double>& v2Target) {
-	Vector2D<Double> desiredVelocity = v2Target - _parent->_position;
-	desiredVelocity.normalize();
-	desiredVelocity *= _maxSpeed;
-	_steeringForce -= desiredVelocity - _parent->_velocity;
+	try {
+		auto parent = _parent.lock();
+		Vector2D<Double> desiredVelocity = v2Target - parent->_position;
+		desiredVelocity.normalize();
+		desiredVelocity *= _maxSpeed;
+		_steeringForce -= desiredVelocity - parent->_velocity;
+	} catch (std::bad_weak_ptr bad) {
+		//TODO Implement behavior for when the weak pointer holds an expired pointer
+	}
 }
 
 void SteeringBehavior::approach(const Vector2D<Double>& v2Target) {
-	Vector2D<Double> desiredVelocity = v2Target - _parent->_position;
-	desiredVelocity.normalize();
-
-	Double distance = _parent->_position.distance(v2Target);
-
-	if (distance > _approachDistance) {
-		desiredVelocity *= _maxSpeed;
-	} else {
-		desiredVelocity *= (_maxSpeed * distance / _approachDistance);
+	try {
+		auto parent = _parent.lock();
+		Vector2D<Double> desiredVelocity = v2Target - parent->_position;
+		desiredVelocity.normalize();
+		Double distance = parent->_position.distance(v2Target);
+		if (distance > _approachDistance) {
+			desiredVelocity *= _maxSpeed;
+		} else {
+			desiredVelocity *= (_maxSpeed * distance / _approachDistance);
+		}
+		_steeringForce += desiredVelocity - parent->_velocity;
+	} catch (std::bad_weak_ptr bad) {
+		//TODO Implement behavior for when the weak pointer holds an expired pointer
 	}
-	_steeringForce += desiredVelocity - _parent->_velocity;
 }
 
 void SteeringBehavior::follow(const Mobile* &mobTarget) {
-	Double projectionDistance = _parent->_position.distance(
-			mobTarget->_position) / _maxSpeed;
-	Vector2D<Double> projectedTarget = mobTarget->_position
-			+ (mobTarget->_velocity * projectionDistance);
-	seek(projectedTarget);
+	try {
+		auto parent = _parent.lock();
+		Double projectionDistance = parent->_position.distance(
+				mobTarget->_position) / _maxSpeed;
+		Vector2D<Double> projectedTarget = mobTarget->_position
+				+ (mobTarget->_velocity * projectionDistance);
+		seek(projectedTarget);
+	} catch (std::bad_weak_ptr bad) {
+		//TODO Implement behavior for when the weak pointer holds an expired pointer
+	}
+
 }
 
 void SteeringBehavior::evade(const Mobile* &mobTarget) {
-	Double projectionDistance = _parent->_position.distance(
-			mobTarget->_position) / _maxSpeed;
-	Vector2D<Double> projectedTarget = mobTarget->_position
-			- (mobTarget->_velocity * projectionDistance);
-	flee(projectedTarget);
+	try {
+		auto parent = _parent.lock();
+		Double projectionDistance = parent->_position.distance(
+				mobTarget->_position) / _maxSpeed;
+		Vector2D<Double> projectedTarget = mobTarget->_position
+				- (mobTarget->_velocity * projectionDistance);
+		flee(projectedTarget);
+	} catch (std::bad_weak_ptr bad) {
+		//TODO Implement behavior for when the weak pointer holds an expired pointer
+	}
+
 }
 
 void SteeringBehavior::avoid(const std::vector<Circle>& vCircles) {
-	std::vector<Circle>::const_iterator ciiCircle;
-	for (ciiCircle = vCircles.begin(); ciiCircle != vCircles.end();
-			ciiCircle++) {
-		Vector2D<Double> heading = _parent->_velocity;
-		heading.normalize();
+	try {
+		auto parent = _parent.lock();
+		std::vector<Circle>::const_iterator ciiCircle;
+		for (ciiCircle = vCircles.begin(); ciiCircle != vCircles.end();
+				ciiCircle++) {
+			Vector2D<Double> heading = parent->_velocity;
+			heading.normalize();
 
-		// Create a vector between the circle and our Mobile
-		Vector2D<Double> difference = ciiCircle->getPosition()
-				- _parent->_position;
-		Double differenceDotProduct = difference.dotProduct(heading);
+			// Create a vector between the circle and our Mobile
+			Vector2D<Double> difference = ciiCircle->getPosition()
+					- parent->_position;
+			Double differenceDotProduct = difference.dotProduct(heading);
 
-		//Make sure circle is in front of our Mobile
-		if (differenceDotProduct > 0.0) {
-			Vector2D<Double> feeler = heading * _avoidDistance;
+			//Make sure circle is in front of our Mobile
+			if (differenceDotProduct > 0.0) {
+				Vector2D<Double> feeler = heading * _avoidDistance;
 
-			//Project the difference on to the feeler arm
-			Vector2D<Double> projection = heading * differenceDotProduct;
+				//Project the difference on to the feeler arm
+				Vector2D<Double> projection = heading * differenceDotProduct;
 
-			//Distance from the circle to the feeler arm
-			Double distanceToFeeler = (projection - difference).getLength();
+				//Distance from the circle to the feeler arm
+				Double distanceToFeeler = (projection - difference).getLength();
 
-			//If feeler intersects circle plus our buffer zone, and projections
-			//is less than the feeler length, collision will occur - so steer away
-			if (distanceToFeeler < ciiCircle->getRadius() + _avoidBuffer
-					&& projection.getLength() < feeler.getLength()) {
+				//If feeler intersects circle plus our buffer zone, and projections
+				//is less than the feeler length, collision will occur - so steer away
+				if (distanceToFeeler < ciiCircle->getRadius() + _avoidBuffer
+						&& projection.getLength() < feeler.getLength()) {
 
-				//Get a force that is 90 degrees from this vector to a circle
-				Vector2D<Double> force = heading * _maxSpeed;
-				force.setAngle(
-						force.getAngle()
-								+ (difference.sign(_parent->_velocity) * M_PI
-										/ 2.0));
+					//Get a force that is 90 degrees from this vector to a circle
+					Vector2D<Double> force = heading * _maxSpeed;
+					force.setAngle(
+							force.getAngle()
+									+ (difference.sign(parent->_velocity) * M_PI
+											/ 2.0));
 
-				//Scale the force by the distance to the circle, inversely proportionate
-				force *= Double(1.0)
-						- projection.getLength() / feeler.getLength();
+					//Scale the force by the distance to the circle, inversely proportionate
+					force *= Double(1.0)
+							- projection.getLength() / feeler.getLength();
 
-				//Adjust our steering
-				_steeringForce += force;
+					//Adjust our steering
+					_steeringForce += force;
 
-				//Apply braking
-				_parent->_velocity *= projection.getLength()
-						/ feeler.getLength();
+					//Apply braking
+					parent->_velocity *= projection.getLength()
+							/ feeler.getLength();
+				}
 			}
 		}
+	} catch (std::bad_weak_ptr bad) {
+		//TODO Implement behavior for when the weak pointer holds an expired pointer
 	}
 }
 
 void SteeringBehavior::followPath(const std::vector<Vector2D<Double> >& vPath,
 		const bool& loop) {
-	Vector2D<Double> waypoint;
-	if (vPath.size() > _pathIndex)
-		waypoint = vPath[_pathIndex];
+	try {
+		auto parent = _parent.lock();
+		Vector2D<Double> waypoint;
+		if (vPath.size() > _pathIndex)
+			waypoint = vPath[_pathIndex];
 
-	if (_parent->_position.distance(waypoint) < _pathThreshold) {
-		if (_pathIndex > vPath.size()) {
-			if (loop)
-				_pathIndex = 0;
-		} else
-			_pathIndex++;
+		if (parent->_position.distance(waypoint) < _pathThreshold) {
+			if (_pathIndex > vPath.size()) {
+				if (loop)
+					_pathIndex = 0;
+			} else
+				_pathIndex++;
+		}
+
+		if (_pathIndex > vPath.size() && !loop)
+			approach(waypoint);
+		else
+			seek(waypoint);
+	} catch (std::bad_weak_ptr bad) {
+		//TODO Implement behavior for when the weak pointer holds an expired pointer
 	}
-
-	if (_pathIndex > vPath.size() && !loop)
-		approach(waypoint);
-	else
-		seek(waypoint);
 }
 
 void SteeringBehavior::flock(std::list<Mobile *> lstMobs) {
-	Vector2D<Double> averageVelocity = _parent->_velocity;
-	Vector2D<Double> averagePosition = Vector2D<Double>();
-	uint32_t viewCount = 0;
+	//TODO Change flock to accept a list of weak_ptr
+	try {
+		auto parent = _parent.lock();
+		Vector2D<Double> averageVelocity = parent->_velocity;
+		Vector2D<Double> averagePosition = Vector2D<Double>();
+		uint32_t viewCount = 0;
 
-	std::list<Mobile *>::const_iterator ciiMobile;
-	for (ciiMobile = lstMobs.begin(); ciiMobile != lstMobs.end(); ciiMobile++) {
-		if ((*ciiMobile)->getId() != _parent->getId()
-				&& isViewable((*ciiMobile))) {
-			averageVelocity += (*ciiMobile)->getVelocity();
-			averagePosition += (*ciiMobile)->getPosition();
-			if (isTooClose((*ciiMobile)))
-				flee((*ciiMobile)->_position);
-			viewCount++;
+		std::list<Mobile *>::const_iterator ciiMobile;
+		for (ciiMobile = lstMobs.begin(); ciiMobile != lstMobs.end();
+				ciiMobile++) {
+			if ((*ciiMobile)->getId() != parent->getId()
+					&& isViewable((*ciiMobile))) {
+				averageVelocity += (*ciiMobile)->getVelocity();
+				averagePosition += (*ciiMobile)->getPosition();
+				if (isTooClose((*ciiMobile)))
+					flee((*ciiMobile)->_position);
+				viewCount++;
+			}
 		}
+
+		if (viewCount > 0) {
+			averageVelocity /= viewCount;
+			averagePosition /= viewCount;
+			seek(averagePosition);
+			_steeringForce += averageVelocity - parent->_velocity;
+		}
+	} catch (std::bad_weak_ptr bad) {
+		//TODO Implement behavior for when the weak pointer holds an expired pointer
 	}
 
-	if (viewCount > 0) {
-		averageVelocity /= viewCount;
-		averagePosition /= viewCount;
-		seek(averagePosition);
-		_steeringForce += averageVelocity - _parent->_velocity;
-	}
 }
 
 bool SteeringBehavior::isViewable(Mobile* pMob) {
-	if (_parent->_position.distance(pMob->_position) > _viewDistance)
+	try {
+		auto parent = _parent.lock();
+		if (parent->_position.distance(pMob->_position) > _viewDistance)
+			return false;
+		Vector2D<Double> heading = parent->_velocity;
+		heading.normalize();
+		Vector2D<Double> difference = pMob->_position - parent->_position;
+		Double dotProduct = difference.dotProduct(heading);
+		if (dotProduct < 0.0)
+			return true;
 		return false;
-	Vector2D<Double> heading = _parent->_velocity;
-	heading.normalize();
-	Vector2D<Double> difference = pMob->_position - _parent->_position;
-	Double dotProduct = difference.dotProduct(heading);
-	if (dotProduct < 0.0)
-		return true;
-	return false;
+	} catch (std::bad_weak_ptr bad) {
+		//TODO Implement behavior for when the weak pointer holds an expired pointer
+	}
 }
 
 bool SteeringBehavior::isTooClose(Mobile* pMob) {
-	return _parent->_position.distance(pMob->_position) < _comfortDistance;
+	try {
+		auto parent = _parent.lock();
+		return parent->_position.distance(pMob->_position) < _comfortDistance;
+	} catch (std::bad_weak_ptr bad) {
+		//TODO Implement behavior for when the weak pointer holds an expired pointer
+	}
 }

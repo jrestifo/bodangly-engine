@@ -7,9 +7,12 @@
 
 #ifndef STEERING_H_
 #define STEERING_H_
-#include "EngineMath.h"
+
 #include <vector>
 #include <list>
+#include <memory>
+
+#include "EngineMath.h"
 
 class Mobile;
 
@@ -18,9 +21,9 @@ class SteeringBehavior {
 public:
 	SteeringBehavior();
 
-	SteeringBehavior(Mobile* parent);
+	SteeringBehavior(std::weak_ptr<Mobile> parent);
 
-	SteeringBehavior(Mobile* parent, const Double& approachDistance,
+	SteeringBehavior(std::weak_ptr<Mobile> parent, const Double& approachDistance,
 			const Double& avoidBuffer, const Double& avoidDistance,
 			const Double& comfortDistance, const Double& maxForce,
 			const int32_t& pathIndex, const Double& pathThreshold,
@@ -50,8 +53,8 @@ public:
 	const Double& getMaxForce() const;
 	void setMaxForce(const Double& maxForce);
 
-	Mobile* getParent() const;
-	void setParent(Mobile* parent);
+	std::weak_ptr<Mobile> getParent() const;
+	void setParent(std::weak_ptr<Mobile> parent);
 
 	const uint32_t& getPathIndex() const;
 	void setPathIndex(const int32_t& pathIndex);
@@ -99,7 +102,7 @@ public:
 	bool isTooClose(Mobile* pMob);
 
 private:
-	Mobile* _parent;
+	std::weak_ptr<Mobile> _parent;
 
 	Vector2D<Double> _steeringForce;
 	Double _approachDistance;

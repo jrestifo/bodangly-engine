@@ -7,6 +7,8 @@
 #ifndef MOBILE_H_
 #define MOBILE_H_
 
+#include <memory>
+
 #include "EngineMath.h"
 #include "Screen.h"
 #include "enum_edgeBehaviors.h"
@@ -47,7 +49,7 @@ public:
 
 	const Vector2D<int32_t>& getScreenPosition() const;
 
-	SteeringBehavior* getSteering() const;
+	std::weak_ptr<SteeringBehavior> getSteering() const;
 
 	const Vector2D<Double>& getVelocity() const;
 	void setVelocity(const Vector2D<Double>& velocity);
@@ -76,8 +78,8 @@ private:
 	Vector2D<int32_t> _screenPosition;
 	Vector2D<Double> _velocity;
 
-	EdgeBehavior* _edgeBehavior;
-	SteeringBehavior* _steeringBehavior;
+	std::shared_ptr<EdgeBehavior> _edgeBehavior;
+	std::shared_ptr<SteeringBehavior> _steeringBehavior;
 };
 
 //Determines how the Mobile should act when hitting the edge of the screen
