@@ -34,10 +34,9 @@ public:
 private:
 
 	//rc4 internal state variables
+	uint8_t _s[256];
 	uint8_t _i;
 	uint8_t _j;
-	uint8_t _s[256];
-
 	//Contains the output of the rc4 algorithm
 	uint8_t _keystream;
 

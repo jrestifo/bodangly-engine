@@ -35,7 +35,7 @@ private:
 	MobileFactory& operator=(MobileFactory const&){};
 	static MobileFactory* _pInstance;
 	Random _clRandom;
-	std::map<uint32_t, std::shared_ptr<Mobile>> _pMobs;
+
 };
 
 

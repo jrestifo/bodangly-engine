@@ -20,60 +20,51 @@ class SteeringBehavior;
 
 Mobile::Mobile() {
 	_id = 0;
-	_edgeBehavior = NULL;
 	_mass = 1.0;
 	_maxSpeed = 10.0;
 	_position = Vector2D<Double>(0.0, 0.0);
 	_screenPosition = Vector2D<int32_t>(0, 0);
 	_velocity = Vector2D<Double>(0.0, 0.0);
-	_steeringBehavior = NULL;
 }
 
-Mobile::Mobile(const Double& mass,
-		const Double& maxSpeed, const Double& rotation,
-		const Vector2D<Double>& position,
+Mobile::Mobile(const Double& mass, const Double& maxSpeed,
+		const Double& rotation, const Vector2D<Double>& position,
 		const Vector2D<int32_t>& screenPosition,
-		const Vector2D<Double>& velocity, const edgeBehavior_t& edgeBehavior,
-		const bool& isSteered) {
+		const Vector2D<Double>& velocity) {
 
 	_id = 0;
-	_edgeBehavior = std::shared_ptr<EdgeBehavior>(new EdgeBehavior(edgeBehavior, this));
 	_mass = mass;
 	_maxSpeed = maxSpeed;
 	_rotation = rotation;
 	_position = position;
 	_screenPosition = screenPosition;
 	_velocity = velocity;
-	if (isSteered)
-		_steeringBehavior = std::shared_ptr<SteeringBehavior>(new SteeringBehavior(this));
-	else
-		_steeringBehavior = NULL;
 }
-
-
 
 Mobile::~Mobile() {
 }
 
 Mobile& Mobile::operator=(const Mobile& mobB) {
-	_edgeBehavior = std::shared_ptr<EdgeBehavior>(new EdgeBehavior(mobB._edgeBehavior->_behavior, this));
 	std::weak_ptr<Mobile> wptr(GameLogic::instance()->findMob(this->_id));
+	_edgeBehavior = std::shared_ptr<EdgeBehavior>(
+			new EdgeBehavior(mobB._edgeBehavior->_behavior, wptr));
+
 	if (mobB._steeringBehavior)
-		_steeringBehavior = std::shared_ptr<SteeringBehavior>(new SteeringBehavior(
-				wptr,
-				mobB._steeringBehavior->_approachDistance,
-				mobB._steeringBehavior->_avoidBuffer,
-				mobB._steeringBehavior->_avoidDistance,
-				mobB._steeringBehavior->_comfortDistance,
-				mobB._steeringBehavior->_maxForce,
-				mobB._steeringBehavior->_pathIndex,
-				mobB._steeringBehavior->_pathThreshold,
-				mobB._steeringBehavior->_viewDistance,
-				mobB._steeringBehavior->_wanderDistance,
-				mobB._steeringBehavior->_wanderRadius,
-				mobB._steeringBehavior->_wanderRange,
-				mobB._steeringBehavior->_wanderAngle,
-				mobB._steeringBehavior->_steeringForce));
+		_steeringBehavior = std::shared_ptr<SteeringBehavior>(
+				new SteeringBehavior(wptr,
+						mobB._steeringBehavior->_approachDistance,
+						mobB._steeringBehavior->_avoidBuffer,
+						mobB._steeringBehavior->_avoidDistance,
+						mobB._steeringBehavior->_comfortDistance,
+						mobB._steeringBehavior->_maxForce,
+						mobB._steeringBehavior->_pathIndex,
+						mobB._steeringBehavior->_pathThreshold,
+						mobB._steeringBehavior->_viewDistance,
+						mobB._steeringBehavior->_wanderDistance,
+						mobB._steeringBehavior->_wanderRadius,
+						mobB._steeringBehavior->_wanderRange,
+						mobB._steeringBehavior->_wanderAngle,
+						mobB._steeringBehavior->_steeringForce));
 	_velocity = mobB._velocity;
 	_mass = mobB._mass;
 	_position = mobB._position;
@@ -83,30 +74,32 @@ Mobile& Mobile::operator=(const Mobile& mobB) {
 	return *this;
 }
 Mobile::Mobile(Mobile const& mobB) {
-	_edgeBehavior = std::shared_ptr<EdgeBehavior>(new EdgeBehavior(mobB._edgeBehavior->_behavior, this));
 	std::weak_ptr<Mobile> wptr(GameLogic::instance()->findMob(this->_id));
-		if (mobB._steeringBehavior)
-			_steeringBehavior = std::shared_ptr<SteeringBehavior>(new SteeringBehavior(
-					wptr,
-					mobB._steeringBehavior->_approachDistance,
-					mobB._steeringBehavior->_avoidBuffer,
-					mobB._steeringBehavior->_avoidDistance,
-					mobB._steeringBehavior->_comfortDistance,
-					mobB._steeringBehavior->_maxForce,
-					mobB._steeringBehavior->_pathIndex,
-					mobB._steeringBehavior->_pathThreshold,
-					mobB._steeringBehavior->_viewDistance,
-					mobB._steeringBehavior->_wanderDistance,
-					mobB._steeringBehavior->_wanderRadius,
-					mobB._steeringBehavior->_wanderRange,
-					mobB._steeringBehavior->_wanderAngle,
-					mobB._steeringBehavior->_steeringForce));
-		_velocity = mobB._velocity;
-		_mass = mobB._mass;
-		_position = mobB._position;
-		_screenPosition = mobB._screenPosition;
-		_rotation = mobB._rotation;
-		_maxSpeed = mobB._maxSpeed;
+	_edgeBehavior = std::shared_ptr<EdgeBehavior>(
+			new EdgeBehavior(mobB._edgeBehavior->_behavior, wptr));
+
+	if (mobB._steeringBehavior)
+		_steeringBehavior = std::shared_ptr<SteeringBehavior>(
+				new SteeringBehavior(wptr,
+						mobB._steeringBehavior->_approachDistance,
+						mobB._steeringBehavior->_avoidBuffer,
+						mobB._steeringBehavior->_avoidDistance,
+						mobB._steeringBehavior->_comfortDistance,
+						mobB._steeringBehavior->_maxForce,
+						mobB._steeringBehavior->_pathIndex,
+						mobB._steeringBehavior->_pathThreshold,
+						mobB._steeringBehavior->_viewDistance,
+						mobB._steeringBehavior->_wanderDistance,
+						mobB._steeringBehavior->_wanderRadius,
+						mobB._steeringBehavior->_wanderRange,
+						mobB._steeringBehavior->_wanderAngle,
+						mobB._steeringBehavior->_steeringForce));
+	_velocity = mobB._velocity;
+	_mass = mobB._mass;
+	_position = mobB._position;
+	_screenPosition = mobB._screenPosition;
+	_rotation = mobB._rotation;
+	_maxSpeed = mobB._maxSpeed;
 }
 
 void Mobile::update(void) {
@@ -135,7 +128,7 @@ EdgeBehavior::EdgeBehavior() {
 	_parent = NULL;
 }
 
-EdgeBehavior::EdgeBehavior(const edgeBehavior_t& behavior, Mobile* parent) {
+EdgeBehavior::EdgeBehavior(const edgeBehavior_t& behavior, std::weak_ptr<Mobile> parent) {
 	_behavior = behavior;
 	_parent = parent;
 }
@@ -172,41 +165,51 @@ void EdgeBehavior::execute() {
 }
 
 void EdgeBehavior::bounce() {
-	if (Screen::instance()) {
-		Vector2D<int32_t> *position = &_parent->_screenPosition;
-		Vector2D<Double> *velocity = &_parent->_velocity;
+	try {
+		auto parent = _parent.lock();
+		if (Screen::instance()) {
+			Vector2D<int32_t> *position = &parent->_screenPosition;
+			Vector2D<Double> *velocity = &parent->_velocity;
 
-		if (position->getX() > Screen::instance()->getWidth()) {
-			position->setX(Screen::instance()->getWidth());
-			velocity->setX(velocity->getX() * -1.0);
-		} else if (position->getX() < 0) {
-			position->setX(0);
-			velocity->setX(velocity->getX() * -1.0);
-		}
+			if (position->getX() > Screen::instance()->getWidth()) {
+				position->setX(Screen::instance()->getWidth());
+				velocity->setX(velocity->getX() * -1.0);
+			} else if (position->getX() < 0) {
+				position->setX(0);
+				velocity->setX(velocity->getX() * -1.0);
+			}
 
-		if (position->getY() > Screen::instance()->getHeight()) {
-			position->setY(Screen::instance()->getHeight());
-			velocity->setY(velocity->getY() * -1.0);
-		} else if (position->getY() < 0) {
-			position->setY(0);
-			velocity->setY(velocity->getY() * -1.0);
+			if (position->getY() > Screen::instance()->getHeight()) {
+				position->setY(Screen::instance()->getHeight());
+				velocity->setY(velocity->getY() * -1.0);
+			} else if (position->getY() < 0) {
+				position->setY(0);
+				velocity->setY(velocity->getY() * -1.0);
+			}
 		}
+	} catch (std::bad_weak_ptr bad) {
+		//TODO Implement behavior for when the weak pointer holds an expired pointer
 	}
 }
 
 void EdgeBehavior::wrap() {
-	if (Screen::instance()) {
-		Vector2D<int32_t> *position = &_parent->_screenPosition;
+	try {
+		auto parent = _parent.lock();
+		if (Screen::instance()) {
+			Vector2D<int32_t> *position = &parent->_screenPosition;
 
-		if (position->getX() > Screen::instance()->getWidth())
-			position->setX(0);
-		if (position->getX() < 0)
-			position->setX(Screen::instance()->getWidth());
+			if (position->getX() > Screen::instance()->getWidth())
+				position->setX(0);
+			if (position->getX() < 0)
+				position->setX(Screen::instance()->getWidth());
 
-		if (position->getY() > Screen::instance()->getHeight())
-			position->setY(0);
-		if (position->getY() < 0)
-			position->setY(Screen::instance()->getHeight());
+			if (position->getY() > Screen::instance()->getHeight())
+				position->setY(0);
+			if (position->getY() < 0)
+				position->setY(Screen::instance()->getHeight());
+		}
+	} catch (std::bad_weak_ptr bad) {
+		//TODO Implement behavior for when the weak pointer holds an expired pointer
 	}
 }
 
@@ -215,7 +218,8 @@ edgeBehavior_t Mobile::getEdgeBehavior() const {
 }
 
 void Mobile::setEdgeBehavior(const edgeBehavior_t& edgeBehavior) {
-	_edgeBehavior = std::shared_ptr<EdgeBehavior>(new EdgeBehavior(edgeBehavior, this));
+	_edgeBehavior = std::shared_ptr<EdgeBehavior>(
+			new EdgeBehavior(edgeBehavior, this));
 }
 
 const Double& Mobile::getMass() const {

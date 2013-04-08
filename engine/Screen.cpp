@@ -19,6 +19,7 @@ Screen::Screen() {
 }
 
 Screen::~Screen() {
+	delete _pInstance;
 }
 
 const int32_t& Screen::getWidth() const {

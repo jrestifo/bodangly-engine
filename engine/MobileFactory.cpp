@@ -4,12 +4,13 @@
  *  Created on: Apr 3, 2013
  *      Author: demian
  */
+#include <map>
+#include <memory>
 
 #include "MobileFactory.h"
-#include <map>
 #include "Mobile.h"
 #include "EngineMath.h"
-#include <memory>
+#include "GameLogic.h"
 
 //Ensure that the class is a singleton
 MobileFactory* MobileFactory::_pInstance = NULL;
@@ -47,8 +48,8 @@ std::shared_ptr<Mobile> MobileFactory::spawn(mob_t mobType) {
  */
 uint32_t MobileFactory::registerMob(std::shared_ptr<Mobile> pMob) {
 	uint32_t new_id = _clRandom.getNumber();
-	while (_pMobs.find(new_id) != _pMobs.end() && INVALID_ID != new_id)
+	while (GameLogic::instance()->_pMobs.find(new_id) != GameLogic::instance()->_pMobs.end() && INVALID_ID != new_id)
 		new_id = _clRandom.getNumber();
-	_pMobs[new_id] = pMob;
+	GameLogic::instance()->_pMobs[new_id] = pMob;
 	return new_id;
 }

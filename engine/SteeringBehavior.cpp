@@ -13,6 +13,7 @@
 
 #include "SteeringBehavior.h"
 #include "Mobile.h"
+#include "Log.h"
 
 //These behaviors are mostly re-implemented from
 //AdvancED ActionScript 3.0 Animation by Keith Peters
@@ -205,8 +206,9 @@ void SteeringBehavior::seek(const Vector2D<Double>& v2Target) {
 		desiredVelocity.normalize();
 		desiredVelocity *= _maxSpeed;
 		_steeringForce += desiredVelocity - parent->_velocity;
-	} catch (std::bad_weak_ptr bad) {
-		//TODO Implement behavior for when the weak pointer holds an expired pointer
+	} catch (const std::bad_weak_ptr& bad) {
+		Log::instance()->postError(
+				std::string("SteeringBehavior seek: ").append(bad.what()));
 	}
 }
 
@@ -217,8 +219,9 @@ void SteeringBehavior::flee(const Vector2D<Double>& v2Target) {
 		desiredVelocity.normalize();
 		desiredVelocity *= _maxSpeed;
 		_steeringForce -= desiredVelocity - parent->_velocity;
-	} catch (std::bad_weak_ptr bad) {
-		//TODO Implement behavior for when the weak pointer holds an expired pointer
+	} catch (const std::bad_weak_ptr& bad) {
+		Log::instance()->postError(
+				std::string("SteeringBehavior flee: ").append(bad.what()));
 	}
 }
 
@@ -234,8 +237,9 @@ void SteeringBehavior::approach(const Vector2D<Double>& v2Target) {
 			desiredVelocity *= (_maxSpeed * distance / _approachDistance);
 		}
 		_steeringForce += desiredVelocity - parent->_velocity;
-	} catch (std::bad_weak_ptr bad) {
-		//TODO Implement behavior for when the weak pointer holds an expired pointer
+	} catch (const std::bad_weak_ptr& bad) {
+		Log::instance()->postError(
+				std::string("SteeringBehavior approach: ").append(bad.what()));
 	}
 }
 
@@ -247,8 +251,9 @@ void SteeringBehavior::follow(const Mobile* &mobTarget) {
 		Vector2D<Double> projectedTarget = mobTarget->_position
 				+ (mobTarget->_velocity * projectionDistance);
 		seek(projectedTarget);
-	} catch (std::bad_weak_ptr bad) {
-		//TODO Implement behavior for when the weak pointer holds an expired pointer
+	} catch (const std::bad_weak_ptr& bad) {
+		Log::instance()->postError(
+				std::string("SteeringBehavior follow: ").append(bad.what()));
 	}
 
 }
@@ -261,8 +266,9 @@ void SteeringBehavior::evade(const Mobile* &mobTarget) {
 		Vector2D<Double> projectedTarget = mobTarget->_position
 				- (mobTarget->_velocity * projectionDistance);
 		flee(projectedTarget);
-	} catch (std::bad_weak_ptr bad) {
-		//TODO Implement behavior for when the weak pointer holds an expired pointer
+	} catch (const std::bad_weak_ptr& bad) {
+		Log::instance()->postError(
+				std::string("SteeringBehavior evade: ").append(bad.what()));
 	}
 
 }
@@ -316,8 +322,9 @@ void SteeringBehavior::avoid(const std::vector<Circle>& vCircles) {
 				}
 			}
 		}
-	} catch (std::bad_weak_ptr bad) {
-		//TODO Implement behavior for when the weak pointer holds an expired pointer
+	} catch (const std::bad_weak_ptr& bad) {
+		Log::instance()->postError(
+				std::string("SteeringBehavior avoid: ").append(bad.what()));
 	}
 }
 
@@ -341,8 +348,10 @@ void SteeringBehavior::followPath(const std::vector<Vector2D<Double> >& vPath,
 			approach(waypoint);
 		else
 			seek(waypoint);
-	} catch (std::bad_weak_ptr bad) {
-		//TODO Implement behavior for when the weak pointer holds an expired pointer
+	} catch (const std::bad_weak_ptr& bad) {
+		Log::instance()->postError(
+				std::string("SteeringBehavior followPath: ").append(
+						bad.what()));
 	}
 }
 
@@ -373,8 +382,9 @@ void SteeringBehavior::flock(std::list<Mobile *> lstMobs) {
 			seek(averagePosition);
 			_steeringForce += averageVelocity - parent->_velocity;
 		}
-	} catch (std::bad_weak_ptr bad) {
-		//TODO Implement behavior for when the weak pointer holds an expired pointer
+	} catch (const std::bad_weak_ptr& bad) {
+		Log::instance()->postError(
+				std::string("SteeringBehavior flock: ").append(bad.what()));
 	}
 
 }
@@ -391,8 +401,10 @@ bool SteeringBehavior::isViewable(Mobile* pMob) {
 		if (dotProduct < 0.0)
 			return true;
 		return false;
-	} catch (std::bad_weak_ptr bad) {
-		//TODO Implement behavior for when the weak pointer holds an expired pointer
+	} catch (const std::bad_weak_ptr& bad) {
+		Log::instance()->postError(
+				std::string("SteeringBehavior isViewable: ").append(
+						bad.what()));
 	}
 }
 
@@ -400,7 +412,9 @@ bool SteeringBehavior::isTooClose(Mobile* pMob) {
 	try {
 		auto parent = _parent.lock();
 		return parent->_position.distance(pMob->_position) < _comfortDistance;
-	} catch (std::bad_weak_ptr bad) {
-		//TODO Implement behavior for when the weak pointer holds an expired pointer
+	} catch (const std::bad_weak_ptr& bad) {
+		Log::instance()->postError(
+				std::string("SteeringBehavior isTooClose: ").append(
+						bad.what()));
 	}
 }

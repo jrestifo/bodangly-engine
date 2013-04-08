@@ -66,8 +66,7 @@ private:
 			const Double& maxSpeed, const Double& rotation,
 			const Vector2D<Double>& position,
 			const Vector2D<int32_t>& screenPosition,
-			const Vector2D<Double>& velocity,
-			const edgeBehavior_t& edgeBehavior, const bool& isSteered);
+			const Vector2D<Double>& velocity );
 
 	uint32_t _id;
 	Double _mass;
@@ -87,7 +86,7 @@ class EdgeBehavior {
 	friend class Mobile;
 public:
 	EdgeBehavior();
-	EdgeBehavior(const edgeBehavior_t& behavior, Mobile* parent);
+	EdgeBehavior(const edgeBehavior_t& behavior, std::weak_ptr<Mobile> parent);
 
 	virtual ~EdgeBehavior();
 
@@ -95,7 +94,7 @@ public:
 
 private:
 
-	Mobile* _parent;
+	std::weak_ptr<Mobile> _parent;
 	edgeBehavior_t _behavior;
 
 	void bounce(void);
