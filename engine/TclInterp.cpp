@@ -11,13 +11,14 @@
 
 TclInterp::TclInterp() {
 	_interp = std::shared_ptr<Tcl_Interp>(new Tcl_Interp);
-
+	_interp = Tcl_CreateInterp();
+	Tcl_Init((Tcl_Interp*)_interp.get());
 }
 
 TclInterp::~TclInterp() {
 }
 
-std::shared_ptr<Tcl_Interp> TclInterp::interp() {
+std::shared_ptr<Tcl_Interp*> TclInterp::interp() {
 	return _interp;
 }
 

@@ -14,6 +14,9 @@ class ScriptedMobile: public Mobile {
 public:
 	ScriptedMobile();
 	virtual ~ScriptedMobile();
+
+private:
+	TclInterp _interp;
 };
 
 #endif /* SCRIPTEDMOBILE_H_ */
