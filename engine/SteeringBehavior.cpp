@@ -19,6 +19,7 @@
 //AdvancED ActionScript 3.0 Animation by Keith Peters
 //TODO Implement time-based integration
 //TODO Comment SteeringBehaviors
+//TODO Change steering behaviors to all accept weak_ptr's
 
 class Mobile;
 

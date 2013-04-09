@@ -51,3 +51,22 @@ void Log::postMsg(const std::string& sMsg) {
 	if (_bStdout)
 		_fLog << "\r\n" << sMsg << "\r\n";
 }
+
+void Log::startStdout() {
+	_bStdout = true;
+}
+
+
+void Log::stopStdout() {
+	_bStdout = false;
+}
+
+void Log::startStderr() {
+	_bStderr = true;
+}
+
+
+void Log::stopStderr() {
+	_bStderr = false;
+}
+
