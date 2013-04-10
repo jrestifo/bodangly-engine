@@ -18,7 +18,7 @@ TclInterp::TclInterp() {
 TclInterp::~TclInterp() {
 }
 
-std::shared_ptr<Tcl_Interp*> TclInterp::interp() {
+std::shared_ptr<Tcl_Interp> TclInterp::interp() {
 	return _interp;
 }
 

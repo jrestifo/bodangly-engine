@@ -14,10 +14,10 @@ class TclInterp {
 public:
 	TclInterp();
 	virtual ~TclInterp();
-	std::shared_ptr<Tcl_Interp*> interp();
+	std::shared_ptr<Tcl_Interp> interp();
 
 private:
-	std::shared_ptr<Tcl_Interp*> _interp;
+	std::shared_ptr<Tcl_Interp> _interp;
 };
 
 #endif /* TCLINTERP_H_ */
