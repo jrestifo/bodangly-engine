@@ -30,6 +30,7 @@ int main() {
 	Random mainRandom;
 	mainRandom.init();
 
+	//Timing tests, nothing interesting here yet
 	uint32_t num = 0;
 	uint32_t i = 0;
 	while (i <= 10000) {

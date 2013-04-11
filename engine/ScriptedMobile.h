@@ -10,13 +10,22 @@
 
 #include "Mobile.h"
 
+class ScriptedMobFactory;
+
 class ScriptedMobile: public Mobile {
+friend class ScriptedMobFactory;
+
 public:
 	ScriptedMobile();
 	virtual ~ScriptedMobile();
 
 private:
+	void ScriptedMobile::attachTclProcedures();
+
 	TclInterp _interp;
+
+	//TODO Define a structure for the exchange of data between ScriptedMobile and Tcl
+	void* _scriptContext;
 };
 
 #endif /* SCRIPTEDMOBILE_H_ */

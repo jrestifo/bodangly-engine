@@ -11,7 +11,7 @@
 
 TclInterp::TclInterp() {
 	_interp = std::shared_ptr<Tcl_Interp>(new Tcl_Interp);
-	_interp = Tcl_CreateInterp();
+	*(_interp.get()) = Tcl_CreateInterp();
 	Tcl_Init((Tcl_Interp*)_interp.get());
 }
 

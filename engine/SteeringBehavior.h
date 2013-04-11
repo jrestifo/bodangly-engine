@@ -11,6 +11,7 @@
 #include <vector>
 #include <list>
 #include <memory>
+#include <tcl.h>
 
 #include "EngineMath.h"
 
@@ -81,25 +82,35 @@ public:
 	void setSteeringForce(const Vector2D<Double>& steeringForce);
 
 	void seek(const Vector2D<Double>& v2Target);
+	int seekTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	void flee(const Vector2D<Double>& v2Target);
+	int fleeTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	void approach(const Vector2D<Double>& v2Target);
+	int approachTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	void follow(const Mobile* &mobTarget);
+	int followTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	void avoid(const std::vector<Circle>& vCircles);
+	int avoidTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	void evade(const Mobile* &mobTarget);
+	int evadeTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	void followPath(const std::vector<Vector2D<Double> >& vv2Path,
 			const bool& loop);
+	int followPathTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	void flock(const std::list<Mobile *> lstMobs);
+	int flockTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	bool isViewable(Mobile* pMob);
+	int isViewableTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	bool isTooClose(Mobile* pMob);
+	int isTooCloseTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 private:
 	std::weak_ptr<Mobile> _parent;

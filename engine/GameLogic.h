@@ -25,6 +25,7 @@ private:
 	GameLogic(GameLogic const&) {};
 	GameLogic& operator=(GameLogic const&) {};
 	static GameLogic* _pInstance;
+
 	std::map<uint32_t, std::shared_ptr<Mobile>> _pMobs;
 };
 
