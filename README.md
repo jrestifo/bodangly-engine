@@ -5,12 +5,12 @@ small 2D game engine
 
 The bodangly engine is a project aiming to become an SDL-based 2D game engine that 
 
-  	* Follows object-oriented design patterns effectively, making it easily extensible
-	* Supports multiplayer over UDP or TCP sockets
-	* Is fully scriptable via Tcl
-	* Is lightweight
-	* Is cross-platform between Linux and Windows
-	* Is free software (LGPL 3.0)
+* Follows object-oriented design patterns effectively, making it easily extensible
+* Supports multiplayer over UDP or TCP sockets
+* Is fully scriptable via Tcl
+* Is lightweight
+* Is cross-platform between Linux and Windows
+* Is free software (LGPL 3.0)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published 
