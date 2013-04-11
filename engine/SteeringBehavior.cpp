@@ -20,6 +20,7 @@
 //TODO Implement time-based integration
 //TODO Comment SteeringBehaviors
 //TODO Change steering behaviors to all accept weak_ptr's
+//TODO Add scripted behavior functions
 
 class Mobile;
 
