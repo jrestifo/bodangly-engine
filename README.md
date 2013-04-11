@@ -5,7 +5,7 @@ small 2D game engine
 
 The bodangly engine is a project aiming to become an SDL-based 2D game engine that 
 
-  * Follows object-oriented design patterns effectively
+  	* Follows object-oriented design patterns effectively, making it easily extensible
 	* Supports multiplayer over UDP or TCP sockets
 	* Is fully scriptable via Tcl
 	* Is lightweight
