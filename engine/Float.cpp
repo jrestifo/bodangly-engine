@@ -12,12 +12,12 @@
 #include <cmath>
 
 Float::Float() {
-	 assert(EPSILONF > 0 && EPSILONF < 2251799813685248);
+	 assert(EPSILONF > 0 && EPSILONF < 4 * 1024 * 1024);
 	_val = 0;
 }
 
 Float::Float(const float& val) {
-	assert(EPSILONF > 0 && EPSILONF < 2251799813685248);
+	assert(EPSILONF > 0 && EPSILONF < 4 * 1024 * 1024);
 	_val = val;
 }
 
