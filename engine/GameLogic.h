@@ -26,6 +26,8 @@ private:
 	GameLogic& operator=(GameLogic const&) {};
 	static GameLogic* _pInstance;
 
+	//Stored as a hash map for now
+	//TODO Grid-based partitioning
 	std::map<uint32_t, std::shared_ptr<Mobile>> _pMobs;
 };
 

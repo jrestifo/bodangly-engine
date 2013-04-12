@@ -17,6 +17,7 @@ class EdgeBehavior;
 class SteeringBehavior;
 class MobileFactory;
 
+//A Mobile is any object that can potentially move
 class Mobile {
 	friend class MobileFactory;
 	friend class EdgeBehavior;
