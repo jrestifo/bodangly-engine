@@ -8,6 +8,7 @@
 #include "ScriptedMobile.h"
 #include <tcl.h>
 #include "EngineMath.h"
+#include "SteeringBehavior.h"
 ScriptedMobile::ScriptedMobile() {
 	_scriptContext = NULL;
 
@@ -21,36 +22,47 @@ ScriptedMobile::~ScriptedMobile() {
  * Creates procedures for our steering behavior functions in the Tcl interpreter
  * This will facilitate complex scripted AI behaviors built from these basic building blocks
  */
+typedef  int (SteeringBehavior::*SteeringBehaviorFn)(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 void ScriptedMobile::attachTclProcedures() {
 
-	Tcl_CreateObjCommand(_interp.interp().get(), "seek",
-			this->_steeringBehavior.get()->seekTcl,
-			(ClientData *) _scriptContext, NULL);
+	SteeringBehaviorFn pSeekTcl = &SteeringBehavior::seekTcl;
+	SteeringBehaviorFn pFleeTcl = &SteeringBehavior::fleeTcl;
+	SteeringBehaviorFn pApproachTcl = &SteeringBehavior::approachTcl;
+	SteeringBehaviorFn pFollowTcl = &SteeringBehavior::followTcl;
+	SteeringBehaviorFn pAvoidTcl = &SteeringBehavior::avoidTcl;
+	SteeringBehaviorFn pEvadeTcl = &SteeringBehavior::evadeTcl;
+	SteeringBehaviorFn pFollowPathTcl = &SteeringBehavior::followPathTcl;
+	SteeringBehaviorFn pFlockTcl = &SteeringBehavior::flockTcl;
+	SteeringBehaviorFn pIsViewableTcl = &SteeringBehavior::isViewableTcl;
+	SteeringBehaviorFn pisTooCloseTcl = &SteeringBehavior::isTooCloseTcl;
+
+	Tcl_CreateObjCommand(_interp.interp().get(), "seek", pSeekTcl,
+			(ClientData *) _scriptContext, (Tcl_CmdDeleteProc *) NULL);
 	Tcl_CreateObjCommand(_interp.interp().get(), "flee",
-			this->_steeringBehavior.get()->fleeTcl,
+			pFleeTcl,
 			(ClientData *) _scriptContext, NULL);
 	Tcl_CreateObjCommand(_interp.interp().get(), "approach",
-			this->_steeringBehavior.get()->approachTcl,
+			pApproachTcl,
 			(ClientData *) _scriptContext, NULL);
 	Tcl_CreateObjCommand(_interp.interp().get(), "follow",
-			this->_steeringBehavior.get()->followTcl,
+			pFollowTcl,
 			(ClientData *) _scriptContext, NULL);
 	Tcl_CreateObjCommand(_interp.interp().get(), "avoid",
-			this->_steeringBehavior.get()->avoidTcl,
+			pAvoidTcl,
 			(ClientData *) _scriptContext, NULL);
 	Tcl_CreateObjCommand(_interp.interp().get(), "evade",
-			this->_steeringBehavior.get()->evadeTcl,
+			pEvadeTcl,
 			(ClientData *) _scriptContext, NULL);
 	Tcl_CreateObjCommand(_interp.interp().get(), "followPath",
-			this->_steeringBehavior.get()->followPathTcl,
+			pFollowPathTcl,
 			(ClientData *) _scriptContext, NULL);
 	Tcl_CreateObjCommand(_interp.interp().get(), "flock",
-			this->_steeringBehavior.get()->flockTcl,
+			pFlockTcl,
 			(ClientData *) _scriptContext, NULL);
 	Tcl_CreateObjCommand(_interp.interp().get(), "isViewable",
-			this->_steeringBehavior.get()->isViewableTcl,
+			pIsViewableTcl,
 			(ClientData *) _scriptContext, NULL);
 	Tcl_CreateObjCommand(_interp.interp().get(), "isTooClose",
-			this->_steeringBehavior.get()->isTooCloseTcl,
+			pisTooCloseTcl,
 			(ClientData *) _scriptContext, NULL);
 }

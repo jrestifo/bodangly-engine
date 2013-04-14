@@ -13,5 +13,6 @@
 #include "Double.h"
 #include "Circle.h"
 #include "Random.h"
+#include "BoundingBox.h"
 
 #endif /* ENGINEMATH_H_ */

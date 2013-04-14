@@ -21,20 +21,22 @@ Log::~Log() {
 	delete _pInstance;
 }
 
+using namespace std;
 bool Log::initLog(const std::string& sPath) {
 	_fLog.open(sPath);
 	if (_fLog.failbit) {
-		std::cerr << "Couldn't open " << sPath << " for logging.\n";
+		cerr << "Couldn't open " << sPath << " for logging.\n";
 		return false;
 	}
 	return true;
 }
 
+using namespace std;
 bool Log::changeFile(const std::string& sNewPath) {
 	_fLog.close();
 	_fLog.open(sNewPath);
 	if (_fLog.failbit) {
-		std::cerr << "Couldn't open " << sNewPath << " for logging.\n";
+		cerr << "Couldn't open " << sNewPath << " for logging.\n";
 		return false;
 	}
 	return true;

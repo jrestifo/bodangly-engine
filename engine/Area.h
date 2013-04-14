@@ -23,7 +23,6 @@ private:
 	uint32_t _width;
 
 	//Mobiles within the grid represented as a list of lists
-	std::list<std::list<Mobile>> _mobilesArea;
 };
 
 #endif /* AREA_H_ */

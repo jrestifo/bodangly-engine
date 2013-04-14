@@ -29,11 +29,12 @@ public:
 	//Returns: an ID representing the map key
 	uint32_t registerMob(std::shared_ptr<Mobile> pMob);
 
-private:
+protected:
 	MobileFactory();
 	MobileFactory(MobileFactory const&){};
 	MobileFactory& operator=(MobileFactory const&){};
 	static MobileFactory* _pInstance;
+private:
 	Random _clRandom;
 
 };

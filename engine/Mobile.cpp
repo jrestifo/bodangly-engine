@@ -125,7 +125,6 @@ void Mobile::update(void) {
 
 EdgeBehavior::EdgeBehavior() {
 	_behavior = WRAP;
-	_parent = NULL;
 }
 
 EdgeBehavior::EdgeBehavior(const edgeBehavior_t& behavior, std::weak_ptr<Mobile> parent) {
@@ -218,8 +217,8 @@ edgeBehavior_t Mobile::getEdgeBehavior() const {
 }
 
 void Mobile::setEdgeBehavior(const edgeBehavior_t& edgeBehavior) {
-	_edgeBehavior = std::shared_ptr<EdgeBehavior>(
-			new EdgeBehavior(edgeBehavior, this));
+	if (_edgeBehavior.get())
+		_edgeBehavior.get()->_behavior = edgeBehavior;
 }
 
 const Double& Mobile::getMass() const {

@@ -59,7 +59,7 @@ public:
 		return _id;
 	}
 
-private:
+protected:
 	Mobile();
 	Mobile(Mobile const& mobB);
 
