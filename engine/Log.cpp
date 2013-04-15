@@ -5,7 +5,7 @@
  *      Author: demian
  */
 #include <string>
-#include <stdio.h>
+#include <iostream>
 #include "Log.h"
 
 //Ensure that the class is a singleton
@@ -21,22 +21,30 @@ Log::~Log() {
 	delete _pInstance;
 }
 
-using namespace std;
+/* instance()
+ * returns a pointer to the singleton MobileFactory instance
+ */
+Log* Log::instance() {
+	if (!_pInstance)
+		_pInstance = new Log;
+	return _pInstance;
+}
+
+
 bool Log::initLog(const std::string& sPath) {
 	_fLog.open(sPath);
 	if (_fLog.failbit) {
-		cerr << "Couldn't open " << sPath << " for logging.\n";
+		std::cerr << "Couldn't open " << sPath << " for logging.\n";
 		return false;
 	}
 	return true;
 }
 
-using namespace std;
 bool Log::changeFile(const std::string& sNewPath) {
 	_fLog.close();
 	_fLog.open(sNewPath);
 	if (_fLog.failbit) {
-		cerr << "Couldn't open " << sNewPath << " for logging.\n";
+		std::cerr << "Couldn't open " << sNewPath << " for logging.\n";
 		return false;
 	}
 	return true;

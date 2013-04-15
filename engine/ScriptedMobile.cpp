@@ -25,44 +25,33 @@ ScriptedMobile::~ScriptedMobile() {
 typedef  int (SteeringBehavior::*SteeringBehaviorFn)(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 void ScriptedMobile::attachTclProcedures() {
 
-	SteeringBehaviorFn pSeekTcl = &SteeringBehavior::seekTcl;
-	SteeringBehaviorFn pFleeTcl = &SteeringBehavior::fleeTcl;
-	SteeringBehaviorFn pApproachTcl = &SteeringBehavior::approachTcl;
-	SteeringBehaviorFn pFollowTcl = &SteeringBehavior::followTcl;
-	SteeringBehaviorFn pAvoidTcl = &SteeringBehavior::avoidTcl;
-	SteeringBehaviorFn pEvadeTcl = &SteeringBehavior::evadeTcl;
-	SteeringBehaviorFn pFollowPathTcl = &SteeringBehavior::followPathTcl;
-	SteeringBehaviorFn pFlockTcl = &SteeringBehavior::flockTcl;
-	SteeringBehaviorFn pIsViewableTcl = &SteeringBehavior::isViewableTcl;
-	SteeringBehaviorFn pisTooCloseTcl = &SteeringBehavior::isTooCloseTcl;
-
-	Tcl_CreateObjCommand(_interp.interp().get(), "seek", pSeekTcl,
+	Tcl_CreateObjCommand(&_interp, "seek",seekTcl,
 			(ClientData *) _scriptContext, (Tcl_CmdDeleteProc *) NULL);
-	Tcl_CreateObjCommand(_interp.interp().get(), "flee",
-			pFleeTcl,
+	Tcl_CreateObjCommand(&_interp, "flee",
+			fleeTcl,
 			(ClientData *) _scriptContext, NULL);
-	Tcl_CreateObjCommand(_interp.interp().get(), "approach",
-			pApproachTcl,
+	Tcl_CreateObjCommand(&_interp, "approach",
+			approachTcl,
 			(ClientData *) _scriptContext, NULL);
-	Tcl_CreateObjCommand(_interp.interp().get(), "follow",
-			pFollowTcl,
+	Tcl_CreateObjCommand(&_interp, "follow",
+			followTcl,
 			(ClientData *) _scriptContext, NULL);
-	Tcl_CreateObjCommand(_interp.interp().get(), "avoid",
-			pAvoidTcl,
+	Tcl_CreateObjCommand(&_interp, "avoid",
+			avoidTcl,
 			(ClientData *) _scriptContext, NULL);
-	Tcl_CreateObjCommand(_interp.interp().get(), "evade",
-			pEvadeTcl,
+	Tcl_CreateObjCommand(&_interp, "evade",
+			evadeTcl,
 			(ClientData *) _scriptContext, NULL);
-	Tcl_CreateObjCommand(_interp.interp().get(), "followPath",
-			pFollowPathTcl,
+	Tcl_CreateObjCommand(&_interp, "followPath",
+			followPathTcl,
 			(ClientData *) _scriptContext, NULL);
-	Tcl_CreateObjCommand(_interp.interp().get(), "flock",
-			pFlockTcl,
+	Tcl_CreateObjCommand(&_interp, "flock",
+			flockTcl,
 			(ClientData *) _scriptContext, NULL);
-	Tcl_CreateObjCommand(_interp.interp().get(), "isViewable",
-			pIsViewableTcl,
+	Tcl_CreateObjCommand(&_interp, "isViewable",
+			isViewableTcl,
 			(ClientData *) _scriptContext, NULL);
-	Tcl_CreateObjCommand(_interp.interp().get(), "isTooClose",
-			pisTooCloseTcl,
+	Tcl_CreateObjCommand(&_interp, "isTooClose",
+			isTooCloseTcl,
 			(ClientData *) _scriptContext, NULL);
 }

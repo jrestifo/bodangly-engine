@@ -9,7 +9,7 @@
 #define SCRIPTEDMOBILE_H_
 
 #include "Mobile.h"
-#include "TclInterp.h"
+#include <tcl.h>
 
 class ScriptedMobFactory;
 
@@ -23,7 +23,7 @@ public:
 private:
 	void attachTclProcedures();
 
-	TclInterp _interp;
+	Tcl_Interp _interp;
 
 	//TODO Define a structure for the exchange of data between ScriptedMobile and Tcl
 	void* _scriptContext;

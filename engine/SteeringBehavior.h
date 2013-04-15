@@ -82,35 +82,25 @@ public:
 	void setSteeringForce(const Vector2D<Double>& steeringForce);
 
 	void seek(const Vector2D<Double>& v2Target);
-	int seekTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	void flee(const Vector2D<Double>& v2Target);
-	int fleeTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	void approach(const Vector2D<Double>& v2Target);
-	int approachTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	void follow(const Mobile* &mobTarget);
-	int followTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	void avoid(const std::vector<Circle>& vCircles);
-	int avoidTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	void evade(const Mobile* &mobTarget);
-	int evadeTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	void followPath(const std::vector<Vector2D<Double> >& vv2Path,
 			const bool& loop);
-	int followPathTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	void flock(const std::list<Mobile *> lstMobs);
-	int flockTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	bool isViewable(Mobile* pMob);
-	int isViewableTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 	bool isTooClose(Mobile* pMob);
-	int isTooCloseTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 private:
 	std::weak_ptr<Mobile> _parent;
@@ -136,5 +126,19 @@ private:
 	Double _wanderRange;
 	Double _wanderAngle;
 };
+
+/* Tcl steering behaviors cannot be class member functions */
+//TODO Implement proper namespace for Tcl steering behaviors
+int seekTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
+int fleeTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
+int approachTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
+int followTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
+int avoidTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
+int evadeTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
+int followPathTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
+int flockTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
+//TODO these boolean functions are intermediates and perhaps should be implemented within Tcl rather than crossing the C/Tcl barrier
+int isViewableTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
+int isTooCloseTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]);
 
 #endif /* STEERING_H_ */

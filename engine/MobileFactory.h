@@ -34,6 +34,7 @@ protected:
 	MobileFactory(MobileFactory const&){};
 	MobileFactory& operator=(MobileFactory const&){};
 	static MobileFactory* _pInstance;
+
 private:
 	Random _clRandom;
 

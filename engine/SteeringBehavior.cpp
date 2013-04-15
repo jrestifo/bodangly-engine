@@ -420,3 +420,45 @@ bool SteeringBehavior::isTooClose(Mobile* pMob) {
 						bad.what()));
 	}
 }
+
+//TODO Implement tcl seeking behaviors
+int seekTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]) {
+	return -1;
+}
+
+int fleeTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]) {
+	return -1;
+}
+
+int approachTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]) {
+	return -1;
+}
+
+int followTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]) {
+	return -1;
+}
+
+int avoidTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]) {
+	return -1;
+}
+
+int evadeTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]) {
+	return -1;
+}
+
+int followPathTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]) {
+	return -1;
+}
+
+int flockTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]) {
+	return -1;
+}
+
+int isViewableTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]) {
+	return -1;
+}
+
+int isTooCloseTcl(ClientData scriptContext, Tcl_Interp *interp, int objc, Tcl_Obj* const objv[]) {
+	return -1;
+}
+
